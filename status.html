@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>📤 Mafia Status Upload</title>
+</head>
+<body>
+  <h2>🧠 Mafia Status – Upload Panel</h2>
+  <form id="statusForm">
+    <label>Type:</label><br>
+    <select id="type" required>
+      <option value="text">Text</option>
+      <option value="image">Image</option>
+      <option value="video">Video</option>
+      <option value="audio">Audio</option>
+      <option value="link">Link</option>
+    </select><br><br>
+
+    <label>Status Content:</label><br>
+    <textarea id="textStatus" placeholder="Enter status text or link..." style="width:300px;height:80px;"></textarea><br><br>
+
+    <label>Upload Media (Image/Video/Audio):</label><br>
+    <input type="file" id="mediaFile" accept="image/*,video/*,audio/*"><br><br>
+
+    <button type="submit">Upload</button>
+  </form>
+
+  <script type="module" src="status.js"></script>
+</body>
+</html>
