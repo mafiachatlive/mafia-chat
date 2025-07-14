@@ -21,6 +21,26 @@
     <label>Upload Media (Image/Video/Audio):</label><br>
     <input type="file" id="mediaFile" accept="image/*,video/*,audio/*"><br><br>
 
+    <!-- Select Expiry Days -->
+<label for="expiryDays">⏳ Delete After (Days):</label><br>
+<select id="expiryDays" required>
+  <option value="1">1 Day</option>
+  <option value="2">2 Days</option>
+  <option value="3">3 Days</option>
+  <option value="5">5 Days</option>
+  <option value="7" selected>7 Days</option>
+  <option value="15">15 Days</option>
+  <option value="30">30 Days</option>
+</select>
+<br><br>
+
+<!-- NSFW (Adult Content) -->
+<label for="allowNSFW">
+  <input type="checkbox" id="allowNSFW" />
+  🔞 This status contains adult content (nudity, violence, etc.)
+</label>
+<br><br>
+
     <button type="submit">Upload</button>
   </form>
 
