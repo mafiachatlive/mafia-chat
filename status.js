@@ -1,3 +1,11 @@
+const confirmed = confirm(
+  "⚠️ You are about to send media.\n\nConfirm that this was requested and consensual.\n\nThis confirmation will be logged."
+)
+
+if (!confirmed) {
+  return alert("❌ Cancelled — media not sent.")
+}
+
 import { supabase } from './supabase.js'
 
 document.getElementById('statusForm').addEventListener('submit', async (e) => {
