@@ -12,20 +12,20 @@ window.getLocation = () => {
     const lat = position.coords.latitude
     const lng = position.coords.longitude
 
-    alert(`✅ Location: ${lat}, ${lng}`)
+    alert(`✅ Location detected:\nLatitude: ${lat}\nLongitude: ${lng}`)
 
-    // Show Map
+    // Show Satellite Map
     if (!map) {
-      map = L.map('map').setView([lat, lng], 13)
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+      map = L.map('map').setView([lat, lng], 17)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics'
       }).addTo(map)
     }
 
-    // Marker
-    L.marker([lat, lng]).addTo(map).bindPopup('You are here').openPopup()
+    // Add marker
+    L.marker([lat, lng]).addTo(map).bindPopup('📍 You are here').openPopup()
 
-    // Save to Supabase (hardcoded user_id for now)
+    // Save to Supabase (hardcoded user for now)
     const { error } = await supabase
       .from('users')
       .update({
@@ -34,10 +34,10 @@ window.getLocation = () => {
           coordinates: [lng, lat]
         }
       })
-      .eq('user_id', 'anonymous-mafia') // update this later to dynamic ID
+      .eq('user_id', 'anonymous-mafia') // replace later with dynamic UID
 
     if (error) {
-      alert('❌ Error saving to Supabase: ' + error.message)
+      alert('❌ Error saving location: ' + error.message)
     } else {
       alert('✅ Location saved to Supabase!')
     }
