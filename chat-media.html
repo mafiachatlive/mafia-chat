@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>📸 Chat Media</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 5px; }
+    .message { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 8px; }
+    img, video, audio { max-width: 100%; margin-top: 10px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h2>📤 Chat Media</h2>
+
+  <input type="text" id="receiver_id" placeholder="Enter Receiver ID" />
+  <input type="file" id="mediaInput" />
+  <select id="mediaType">
+    <option value="image">Image</option>
+    <option value="video">Video</option>
+    <option value="voice">Audio</option>
+  </select>
+  <button onclick="sendMedia()">Send</button>
+
+  <hr/>
+  <h3>💬 Messages</h3>
+  <div id="mediaMessages"></div>
+
+  <script src="chat-media.js"></script>
+</body>
+</html>
