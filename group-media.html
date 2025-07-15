@@ -1,23 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Group Media Chat</title>
+  <title>📁 Group Media Chat</title>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="supabase.js"></script>
+  <script type="module" src="supabase.js"></script>
+  <link rel="stylesheet" href="style.css">
   <style>
-    #mediaBox { max-height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
-    .media-msg { margin-bottom: 15px; }
+    body { font-family: sans-serif; padding: 20px; }
+    #mediaBox { max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+    .media-msg { margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
+    img, video, audio { max-width: 100%; border-radius: 8px; margin-top: 5px; }
+    .tick { font-size: 14px; margin-top: 5px; }
+    .emoji-picker { margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h2>Group Media Sharing</h2>
+  <h2>👥 Group Media Sharing</h2>
 
-  <input type="text" id="group_id" placeholder="Group ID"><br><br>
-  <input type="file" id="fileInput"><br><br>
+  <input type="text" id="group_id" placeholder="Group ID" /><br><br>
+  <input type="file" id="fileInput" /><br><br>
+
+  <select id="mediaType">
+    <option value="image">🖼️ Image</option>
+    <option value="video">🎥 Video</option>
+    <option value="voice">🎤 Voice</option>
+    <option value="file">📁 File</option>
+  </select><br><br>
+
   <button onclick="uploadMedia()">Upload Media</button>
 
+  <!-- 🔥 Emoji Picker Placeholder -->
+  <div id="emojiPicker" class="emoji-picker"></div>
+
+  <hr/>
   <div id="mediaBox"></div>
 
-  <script src="group-media.js"></script>
+  <script type="module" src="group-media.js"></script>
+  <script type="module" src="emoji-picker.js"></script>
 </body>
 </html>
