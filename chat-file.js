@@ -1,3 +1,11 @@
+async function markDelivered(messageId) {
+  await supabase.from('messages').update({ delivered: true }).eq('id', messageId);
+}
+
+async function markSeen(messageId) {
+  await supabase.from('messages').update({ seen: true }).eq('id', messageId);
+}
+
 // chat-file.js
 async function uploadFile() {
   const fileInput = document.getElementById("fileInput");
