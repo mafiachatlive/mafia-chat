@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>📺 View Status</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .status-card {
+      border: 1px solid #ccc; padding: 10px; border-radius: 10px; margin-bottom: 15px;
+      background: #f5f5f5;
+    }
+    video, img { max-width: 100%; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <h2>👁️ View Status</h2>
+  <input type="text" id="user_id" placeholder="Enter User ID or Leave Empty for All" />
+  <button onclick="loadStatus()">Load Status</button>
+
+  <div id="statusContainer"></div>
+
+  <script src="status-view.js"></script>
+</body>
+</html>
