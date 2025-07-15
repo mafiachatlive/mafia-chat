@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Settings</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+</head>
+<body>
+  <h2>Group Settings</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+
+  <h3>Group Info</h3>
+  <input type="text" id="group_name" placeholder="Group Name" />
+  <input type="text" id="group_description" placeholder="Description" />
+  <input type="text" id="group_profile" placeholder="Profile Image URL" />
+  <input type="text" id="group_banner" placeholder="Banner Image URL" />
+  <button onclick="updateGroupInfo()">Update Info</button>
+
+  <h3>Member Settings</h3>
+  <label>Who can post?</label>
+  <select id="can_post">
+    <option value="all">All Members</option>
+    <option value="selected">Selected Members</option>
+    <option value="admins">Admins Only</option>
+  </select>
+
+  <label>Who can see members?</label>
+  <select id="can_see_members">
+    <option value="all">All</option>
+    <option value="selected">Selected</option>
+    <option value="admins">Admins</option>
+    <option value="owner_only">Only Owner</option>
+  </select>
+
+  <button onclick="updateGroupSettings()">Save Settings</button>
+
+  <div id="status"></div>
+  <script src="group-settings.js"></script>
+</body>
+</html>
