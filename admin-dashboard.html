@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mafia Admin Dashboard</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 10px; }
+    button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Admin Dashboard</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+  <button onclick="loadReports()">Load Reports</button>
+
+  <h3>🚨 Flagged Messages</h3>
+  <div id="flaggedMessages"></div>
+
+  <h3>📁 Media Logs</h3>
+  <div id="mediaLogs"></div>
+
+  <script src="admin-dashboard.js"></script>
+</body>
+</html>
