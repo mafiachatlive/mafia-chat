@@ -6,7 +6,9 @@
   <style>
     body { font-family: sans-serif; padding: 20px; }
     #chat-box { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; }
-    .msg { margin-bottom: 10px; }
+    .msg { margin-bottom: 10px; padding: 5px; border-radius: 8px; background: #f5f5f5; }
+    .tick { font-size: 12px; margin-left: 10px; }
+    #emoji-btn { margin-left: 8px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -18,8 +20,41 @@
   <form id="message-form">
     <input type="text" id="message" placeholder="Type your message..." required />
     <button type="submit">Send</button>
+    <span id="emoji-btn">😊</span>
   </form>
 
+  <!-- Emoji Picker -->
+  <div id="emoji-picker" style="display:none; border:1px solid #ccc; padding:5px; background:#fff; position:absolute;"></div>
+
   <script type="module" src="chat-text.js"></script>
+  <script>
+    // Basic Emoji Picker
+    const emojis = ['😎','😂','😜','❤️','💀','🔥','🎯','🚀','👀','🤯'];
+    const picker = document.getElementById('emoji-picker');
+    const emojiBtn = document.getElementById('emoji-btn');
+    const msgInput = document.getElementById('message');
+
+    emojiBtn.onclick = () => {
+      picker.style.display = picker.style.display === 'block' ? 'none' : 'block';
+      picker.innerHTML = '';
+      emojis.forEach(e => {
+        const btn = document.createElement('button');
+        btn.textContent = e;
+        btn.onclick = () => {
+          msgInput.value += e;
+          picker.style.display = 'none';
+        };
+        picker.appendChild(btn);
+      });
+    };
+
+    // Close picker if clicked outside
+    window.addEventListener('click', e => {
+      if (!picker.contains(e.target) && e.target !== emojiBtn) {
+        picker.style.display = 'none';
+      }
+    });
+  </script>
+
 </body>
 </html>
