@@ -2,23 +2,42 @@
 <html>
 <head>
   <title>🔊 Chat Voice Messages</title>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="supabase.js"></script>
+  <script type="module" src="supabase.js"></script>
+  <script type="module" src="chat-voice-view.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
     .voice-card {
       background: #e8f0fe;
       border-radius: 10px;
       padding: 15px;
       margin-bottom: 15px;
+      position: relative;
     }
     audio {
       width: 100%;
       margin-top: 10px;
     }
+    .status {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 0.9em;
+    }
+    .emoji-section {
+      margin-top: 10px;
+    }
+    .emoji {
+      cursor: pointer;
+      font-size: 18px;
+      margin: 0 5px;
+    }
   </style>
 </head>
 <body>
+
   <h2>🎧 Chat Voice Message Viewer</h2>
 
   <input type="text" id="receiver_id" placeholder="Enter Receiver User ID" />
@@ -26,6 +45,5 @@
 
   <div id="voiceContainer"></div>
 
-  <script src="chat-voice-view.js"></script>
 </body>
 </html>
