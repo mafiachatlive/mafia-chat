@@ -1,8 +1,28 @@
-<!-- chat-file.html -->
-<script src="supabase.js"></script>
-<script src="chat-file.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>📁 Chat File</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 5px; }
+    .message { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 8px; }
+    a { display: block; margin-top: 5px; }
+  </style>
+</head>
+<body>
 
-<h2>📁 Upload Any File</h2>
-<input type="file" id="fileInput" />
-<button onclick="uploadFile()">Upload</button>
-<p id="status"></p>
+  <h2>📁 Upload Any File</h2>
+  <input type="text" id="receiver_id" placeholder="Receiver ID" />
+  <input type="file" id="fileInput" />
+  <button onclick="uploadFile()">Upload</button>
+  <p id="status"></p>
+
+  <hr/>
+  <h3>📂 File Messages</h3>
+  <div id="fileMessages"></div>
+
+  <script src="chat-file.js"></script>
+</body>
+</html>
