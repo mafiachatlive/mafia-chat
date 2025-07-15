@@ -1,3 +1,11 @@
+async function markDelivered(messageId) {
+  await supabase.from('messages').update({ delivered: true }).eq('id', messageId);
+}
+
+async function markSeen(messageId) {
+  await supabase.from('messages').update({ seen: true }).eq('id', messageId);
+}
+
 import { supabase } from './supabase.js'
 
 const chatBox = document.getElementById('chat-box')
