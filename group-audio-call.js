@@ -1,7 +1,13 @@
 let peerConnections = {};
 let localStream;
 let groupId;
-const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
+const config = {
+  iceServers: [
+    { urls: 'stun:stun.stunprotocol.org' },
+    { urls: 'stun:openrelay.metered.ca:80' }
+  ]
+};
 
 async function startAudioCall() {
   groupId = document.getElementById('group_id').value;
