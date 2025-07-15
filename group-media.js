@@ -1,27 +1,24 @@
 let currentUser;
 
 async function init() {
-  const user = supabase.auth.user();
-  if (!user) {
-    alert('Login required');
-    return;
-  }
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return alert('Login required');
   currentUser = user;
 }
 init();
 
 document.getElementById('group_id').addEventListener('change', function () {
   loadGroupMedia(this.value);
+  initEmojiPicker(); // for this group
 });
 
 async function uploadMedia() {
   const groupId = document.getElementById('group_id').value;
   const file = document.getElementById('fileInput').files[0];
-  if (!groupId || !file) return alert('Select file & group ID');
+  if (!groupId || !file) return alert('❌ Select file & group ID');
 
   const filePath = `groups/${groupId}/${Date.now()}_${file.name}`;
 
-  // Upload to Supabase Storage
   const { data: uploaded, error: uploadError } = await supabase
     .storage
     .from('group-media')
@@ -31,9 +28,10 @@ async function uploadMedia() {
 
   const fileURL = supabase.storage.from('group-media').getPublicUrl(filePath).publicURL;
 
-  const fileType = file.type.startsWith('image') ? 'image' :
-                   file.type.startsWith('video') ? 'video' :
-                   file.type.startsWith('audio') ? 'voice' : 'file';
+  const fileType = file.type.startsWith('image') ? 'image'
+                : file.type.startsWith('video') ? 'video'
+                : file.type.startsWith('audio') ? 'voice'
+                : 'file';
 
   const { error: dbError } = await supabase
     .from('group_chats')
@@ -41,7 +39,10 @@ async function uploadMedia() {
       group_id: groupId,
       sender_id: currentUser.id,
       type: fileType,
-      content: fileURL
+      content: fileURL,
+      delivered: false,
+      seen: false,
+      timestamp: new Date().toISOString()
     }]);
 
   if (dbError) return alert('❌ DB insert failed');
@@ -50,10 +51,18 @@ async function uploadMedia() {
   loadGroupMedia(groupId);
 }
 
+async function markDelivered(id) {
+  await supabase.from('group_chats').update({ delivered: true }).eq('id', id);
+}
+
+async function markSeen(id) {
+  await supabase.from('group_chats').update({ seen: true }).eq('id', id);
+}
+
 async function loadGroupMedia(groupId) {
   const { data, error } = await supabase
     .from('group_chats')
-    .select('type, content, sender_id, timestamp')
+    .select('*')
     .eq('group_id', groupId)
     .in('type', ['image', 'video', 'voice', 'file'])
     .order('timestamp', { ascending: true });
@@ -64,17 +73,34 @@ async function loadGroupMedia(groupId) {
   if (!data || error) return;
 
   data.forEach(msg => {
-    let el = '';
+    const ticks = msg.seen
+      ? '✔✔ <span style="color:green;">Seen</span>'
+      : msg.delivered
+        ? '✔✔ <span style="color:blue;">Delivered</span>'
+        : '✔ Sent';
+
+    let mediaHTML = '';
     if (msg.type === 'image') {
-      el = `<img src="${msg.content}" width="200">`;
+      mediaHTML = `<img src="${msg.content}" width="200" onload="markSeen('${msg.id}')">`;
     } else if (msg.type === 'video') {
-      el = `<video controls width="250"><source src="${msg.content}"></video>`;
+      mediaHTML = `<video controls width="250" onplay="markSeen('${msg.id}')"><source src="${msg.content}"></video>`;
     } else if (msg.type === 'voice') {
-      el = `<audio controls src="${msg.content}"></audio>`;
+      mediaHTML = `<audio controls src="${msg.content}" onplay="markSeen('${msg.id}')"></audio>`;
     } else {
-      el = `<a href="${msg.content}" target="_blank">📁 Download File</a>`;
+      mediaHTML = `<a href="${msg.content}" target="_blank" onclick="markSeen('${msg.id}')">📁 Download File</a>`;
     }
 
-    box.innerHTML += `<div class="media-msg"><strong>${msg.sender_id}</strong><br>${el}</div><hr>`;
+    const bubble = `
+      <div class="media-msg">
+        <strong>${msg.sender_id}</strong><br/>
+        ${mediaHTML}
+        <div class="tick">${ticks}</div>
+      </div>
+    `;
+    box.innerHTML += bubble;
+
+    if (!msg.delivered && msg.sender_id !== currentUser.id) {
+      markDelivered(msg.id);
+    }
   });
 }
