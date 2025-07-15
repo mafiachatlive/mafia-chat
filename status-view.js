@@ -1,5 +1,3 @@
-const STATUS_EXPIRY_HOURS = 24;
-
 async function loadStatus() {
   const userId = document.getElementById('user_id').value.trim();
 
@@ -24,9 +22,10 @@ async function loadStatus() {
 
   data.forEach((status) => {
     const created = new Date(status.created_at);
+    const expiry = status.expiry_days || 1; // fallback default
     const hoursDiff = (now - created) / (1000 * 60 * 60);
 
-    if (hoursDiff > STATUS_EXPIRY_HOURS) return; // expired
+    if (hoursDiff > expiry * 24) return; // expired
 
     const card = document.createElement('div');
     card.className = 'status-card';
@@ -34,6 +33,7 @@ async function loadStatus() {
     card.innerHTML = `
       <p><strong>By:</strong> ${status.user_id}</p>
       <p><strong>Type:</strong> ${status.type}</p>
+      <p><strong>Expires in:</strong> ${expiry} day(s)</p>
       <p><strong>Posted:</strong> ${created.toLocaleString()}</p>
     `;
 
