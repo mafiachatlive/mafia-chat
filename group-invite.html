@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Invite</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 5px; }
+  </style>
+</head>
+<body>
+  <h2>🔗 Generate Group Invite</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+  <input type="text" id="invite_for_user" placeholder="Optional: specific user ID" />
+  <button onclick="generateInvite()">Generate Invite</button>
+
+  <div id="inviteLink"></div>
+
+  <h3>📥 Join Group</h3>
+  <input type="text" id="invite_token" placeholder="Enter Invite Token" />
+  <button onclick="joinWithInvite()">Join Group</button>
+
+  <div id="joinStatus"></div>
+
+  <script src="group-invite.js"></script>
+</body>
+</html>
