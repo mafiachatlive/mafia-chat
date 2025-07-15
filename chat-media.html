@@ -1,17 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>📸 Chat Media</title>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
   <script src="supabase.js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; }
-    input, button { margin: 5px; }
-    .message { border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 8px; }
-    img, video, audio { max-width: 100%; margin-top: 10px; border-radius: 8px; }
+    input, button, select { margin: 5px; padding: 5px; }
+    .message {
+      border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 8px;
+      background: #f9f9f9;
+    }
+    img, video, audio {
+      max-width: 100%; margin-top: 10px; border-radius: 8px;
+    }
+    .tick { float: right; font-size: 12px; margin-left: 10px; }
+    #emojiPicker, #favorites {
+      margin: 10px 0; padding: 5px; border: 1px solid #ddd;
+    }
+    .emoji { font-size: 20px; cursor: pointer; margin: 3px; }
+    .folder-title { font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
+
   <h2>📤 Chat Media</h2>
 
   <input type="text" id="receiver_id" placeholder="Enter Receiver ID" />
@@ -23,10 +36,20 @@
   </select>
   <button onclick="sendMedia()">Send</button>
 
+  <div id="favorites">
+    <div class="folder-title">⭐ My Favorites</div>
+    <div id="favoriteEmojis"></div>
+  </div>
+
+  <div id="emojiPicker">
+    <input type="text" placeholder="Search emojis..." oninput="filterEmojis(this.value)" />
+    <div id="emojiList"></div>
+  </div>
+
   <hr/>
   <h3>💬 Messages</h3>
   <div id="mediaMessages"></div>
 
-  <script src="chat-media.js"></script>
+  <script type="module" src="chat-media.js"></script>
 </body>
 </html>
