@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group File Upload</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+</head>
+<body>
+  <h2>Upload Any File to Group</h2>
+
+  <input type="text" id="group_id" placeholder="Group ID"><br><br>
+  <input type="file" id="fileInput"><br><br>
+  <button onclick="uploadFile()">📁 Upload File</button>
+
+  <div id="fileList"></div>
+
+  <script src="group-file.js"></script>
+</body>
+</html>
