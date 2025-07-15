@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <title>Mafia Chat – Voice</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     #voice-box { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; }
     .msg { margin-bottom: 10px; }
+    audio { width: 100%; margin-top: 5px; border-radius: 8px; }
   </style>
 </head>
 <body>
 
   <h2>🎤 Mafia Voice Chat</h2>
 
+  <input type="text" id="receiver_id" placeholder="Receiver ID" />
   <div id="voice-box"></div>
-
   <button id="recordBtn">🎙️ Record Voice Note</button>
 
-  <script type="module" src="chat-voice.js"></script>
+  <script src="chat-voice.js" type="module"></script>
 </body>
 </html>
