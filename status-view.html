@@ -15,7 +15,16 @@
 </head>
 <body>
   <h2>👁️ View Status</h2>
+
   <input type="text" id="user_id" placeholder="Enter User ID or Leave Empty for All" />
+
+  <label for="max_days">Max Days Old:</label>
+  <select id="max_days">
+    <option value="1">1 Day</option>
+    <option value="7" selected>7 Days</option>
+    <option value="30">30 Days</option>
+  </select>
+
   <button onclick="loadStatus()">Load Status</button>
 
   <div id="statusContainer"></div>
