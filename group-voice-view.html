@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🔊 View Group Voice Messages</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .voice-card {
+      background: #f2f2f2;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    audio {
+      width: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔊 Group Voice Message Viewer</h2>
+
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+  <button onclick="loadGroupVoice()">Load Voice Messages</button>
+
+  <div id="voiceContainer"></div>
+
+  <script src="group-voice-view.js"></script>
+</body>
+</html>
