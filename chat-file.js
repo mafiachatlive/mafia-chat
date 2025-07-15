@@ -1,71 +1,84 @@
-const receiver_id = "REPLACE_RECEIVER_ID"; // ⛔ Replace this with actual receiver UID
+const bucket = 'media';
 
 async function uploadFile() {
-  const fileInput = document.getElementById("fileInput");
-  const file = fileInput.files[0];
-  if (!file) return alert("⚠️ Select a file first.");
-
-  const fileName = `${Date.now()}_${file.name}`;
-  const { data, error } = await supabase.storage
-    .from('file-uploads')
-    .upload(fileName, file);
-
+  const receiverId = document.getElementById("receiver_id").value.trim();
+  const file = document.getElementById("fileInput").files[0];
   const status = document.getElementById("status");
 
-  if (error) {
-    status.textContent = "❌ Upload failed.";
-    console.error(error);
-    return;
-  }
+  if (!receiverId || !file) return alert("⚠️ Fill all fields");
 
-  status.textContent = `✅ File uploaded: ${fileName}`;
+  const filename = `${Date.now()}_${file.name}`;
+  const { data, error: uploadError } = await supabase
+    .storage
+    .from(bucket)
+    .upload(filename, file);
 
-  await supabase.from("messages").insert([{
+  if (uploadError) return (status.textContent = "❌ Upload failed");
+
+  const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filename);
+
+  const { error } = await supabase.from("messages").insert([{
     sender_id: supabase.auth.user().id,
-    receiver_id: receiver_id,
+    receiver_id: receiverId,
     type: "file",
-    content: fileName,
-    delivered: false,
-    seen: false
+    content: urlData.publicUrl,
+    timestamp: new Date().toISOString()
   }]);
+
+  if (error) return (status.textContent = "❌ DB error");
+
+  status.textContent = "✅ File uploaded!";
+  loadFiles(receiverId);
 }
 
-// ✅ Load messages with ticks
-async function loadMessages() {
-  const { data, error } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("sender_id", supabase.auth.user().id)
-    .or("type.eq.file")
-    .order("timestamp", { ascending: false });
+async function markDelivered(id) {
+  await supabase.from('messages').update({ delivered: true }).eq('id', id);
+}
 
-  const container = document.getElementById("fileMessages");
-  container.innerHTML = "";
+async function markSeen(id) {
+  await supabase.from('messages').update({ seen: true }).eq('id', id);
+}
+
+async function loadFiles(receiverId) {
+  const userId = supabase.auth.user().id;
+
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+    .eq('type', 'file')
+    .order('timestamp', { ascending: true });
+
+  const box = document.getElementById("fileMessages");
+  box.innerHTML = '';
+
+  if (error) return (box.innerText = '❌ Error loading');
 
   data.forEach(msg => {
-    const ticks = msg.seen
-      ? '✔✔ <span style="color:green;">Seen</span>'
-      : msg.delivered
-        ? '✔✔ <span style="color:blue;">Delivered</span>'
-        : '✔ Sent';
+    if (
+      (msg.sender_id === userId && msg.receiver_id === receiverId) ||
+      (msg.sender_id === receiverId && msg.receiver_id === userId)
+    ) {
+      const div = document.createElement("div");
+      div.className = "message";
 
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <p><strong>File:</strong> <a href="https://ltrbnjqvmtaposcbfzem.supabase.co/storage/v1/object/public/file-uploads/${msg.content}" target="_blank">${msg.content}</a></p>
-      <p>Status: ${ticks}</p>
-      <hr/>
-    `;
-    container.appendChild(div);
+      const ticks = msg.seen
+        ? '✔✔ <span style="color:green;">Seen</span>'
+        : msg.delivered
+          ? '✔✔ <span style="color:blue;">Delivered</span>'
+          : '✔ Sent';
+
+      div.innerHTML = `
+        <p><strong>${msg.sender_id === userId ? 'You' : msg.sender_id}</strong> ${msg.sender_id === userId ? ticks : ''}</p>
+        <a href="${msg.content}" target="_blank">${msg.content.split('/').pop()}</a>
+      `;
+
+      box.appendChild(div);
+
+      if (!msg.delivered && msg.receiver_id === userId) markDelivered(msg.id);
+      if (msg.receiver_id === userId) markSeen(msg.id);
+    }
   });
-}
 
-// ✅ Tick update functions
-async function markDelivered(messageId) {
-  await supabase.from('messages').update({ delivered: true }).eq('id', messageId);
+  box.scrollTop = box.scrollHeight;
 }
-
-async function markSeen(messageId) {
-  await supabase.from('messages').update({ seen: true }).eq('id', messageId);
-}
-
-loadMessages();
