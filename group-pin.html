@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Pinned Messages</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .pin-card { border: 1px solid #aaa; padding: 10px; margin-bottom: 10px; border-radius: 8px; background: #f9f9f9; }
+    .pin-card button { margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <h2>📌 Group Pinned Messages</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+  <textarea id="pin_content" placeholder="Message to pin..."></textarea><br />
+  <button onclick="pinMessage()">📌 Pin Message</button>
+
+  <hr />
+  <div id="pinList"></div>
+
+  <script src="group-pin.js"></script>
+</body>
+</html>
