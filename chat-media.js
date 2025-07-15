@@ -24,12 +24,13 @@ async function sendMedia() {
     sender_id: supabase.auth.user().id,
     receiver_id: receiverId,
     type: type,
-    content: urlData.publicUrl
+    content: urlData.publicUrl,
+    timestamp: new Date().toISOString()
   }]);
 
   if (error) return alert('Message send error: ' + error.message);
 
-  alert('Sent!');
+  alert('✅ Sent!');
   loadMessages(receiverId);
 }
 
@@ -48,22 +49,27 @@ async function loadMessages(receiverId) {
     .from('messages')
     .select('*')
     .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
-    .eq('type', 'image') // Load all 3 types
-    .order('timestamp', { ascending: false });
+    .in('type', ['image', 'video', 'voice']) // All media types
+    .order('timestamp', { ascending: true });
 
   const box = document.getElementById('mediaMessages');
   box.innerHTML = '';
 
-  if (error) return (box.innerText = 'Error: ' + error.message);
+  if (error) return (box.innerText = '❌ Error: ' + error.message);
 
   data.forEach(msg => {
+    const isMyMessage = msg.sender_id === userId;
+    const isToMe = msg.receiver_id === userId;
+
+    // Only show between the 2
     if (
-      (msg.sender_id === userId && msg.receiver_id === receiverId) ||
-      (msg.sender_id === receiverId && msg.receiver_id === userId)
+      (isMyMessage && msg.receiver_id === receiverId) ||
+      (isToMe && msg.sender_id === receiverId)
     ) {
       const div = document.createElement('div');
       div.className = 'message';
 
+      // Tick display
       const ticks = msg.seen
         ? '✔✔ <span style="color:green;">Seen</span>'
         : msg.delivered
@@ -76,15 +82,18 @@ async function loadMessages(receiverId) {
       else if (msg.type === 'voice') mediaHtml = `<audio src="${msg.content}" controls onplay="markSeen('${msg.id}')"></audio>`;
 
       div.innerHTML = `
-        <p><strong>From:</strong> ${msg.sender_id}</p>
+        <p><strong>${isMyMessage ? 'You' : msg.sender_id}</strong> 
+          <span class="tick">${isMyMessage ? ticks : ''}</span>
+        </p>
         ${mediaHtml}
-        <p>${ticks}</p>
       `;
+
       box.appendChild(div);
 
-      if (!msg.delivered && msg.receiver_id === userId) markDelivered(msg.id);
+      // If receiver is me and not delivered
+      if (!msg.delivered && isToMe) markDelivered(msg.id);
     }
   });
-}
 
-// Optional: auto-load after a few sec or use real-time later
+  box.scrollTop = box.scrollHeight;
+}
