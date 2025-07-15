@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Join Requests</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 10px; }
+    button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h2>📨 Pending Join Requests</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+  <button onclick="loadRequests()">Load Requests</button>
+
+  <div id="requestsList"></div>
+
+  <script src="group-requests.js"></script>
+</body>
+</html>
