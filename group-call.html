@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Video Call</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    video { width: 200px; margin: 10px; border: 2px solid #555; }
+  </style>
+</head>
+<body>
+  <h2>Group Video Call</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID"><br><br>
+  <button onclick="startCall()">📞 Join Call</button>
+
+  <div id="videoContainer"></div>
+
+  <script src="group-call.js"></script>
+</body>
+</html>
