@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Media Chat</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    #mediaBox { max-height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+    .media-msg { margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <h2>Group Media Sharing</h2>
+
+  <input type="text" id="group_id" placeholder="Group ID"><br><br>
+  <input type="file" id="fileInput"><br><br>
+  <button onclick="uploadMedia()">Upload Media</button>
+
+  <div id="mediaBox"></div>
+
+  <script src="group-media.js"></script>
+</body>
+</html>
