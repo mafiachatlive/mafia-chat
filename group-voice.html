@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Voice Notes</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    #recordingsList audio { margin-bottom: 15px; display: block; }
+  </style>
+</head>
+<body>
+  <h2>Send Voice Note to Group</h2>
+
+  <input type="text" id="group_id" placeholder="Group ID"><br><br>
+
+  <button id="recordBtn">🎙️ Start Recording</button>
+  <button id="stopBtn" disabled>🛑 Stop & Upload</button><br><br>
+
+  <div id="recordingsList"></div>
+
+  <script src="group-voice.js"></script>
+</body>
+</html>
