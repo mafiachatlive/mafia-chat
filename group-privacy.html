@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Privacy Settings</title>
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+  <script src="supabase.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    select, input { width: 100%; padding: 5px; margin-top: 5px; }
+    button { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>🔐 Group Privacy Settings</h2>
+  <input type="text" id="group_id" placeholder="Enter Group ID" />
+
+  <label>📢 Who can post?</label>
+  <select id="can_post">
+    <option value="all">All Members</option>
+    <option value="selected">Selected Members</option>
+    <option value="admins">Only Admins</option>
+  </select>
+
+  <label>🧑‍🤝‍🧑 Who can see member list?</label>
+  <select id="can_see_members">
+    <option value="all">All Members</option>
+    <option value="selected">Selected Members</option>
+    <option value="admins">Only Admins</option>
+    <option value="owner_only">Only Owner</option>
+  </select>
+
+  <label>👁️ Show member phone numbers?</label>
+  <select id="show_phone">
+    <option value="true">Yes</option>
+    <option value="false">No (show unique ID)</option>
+  </select>
+
+  <label>🔍 Make group searchable?</label>
+  <select id="is_searchable">
+    <option value="true">Yes</option>
+    <option value="false">Hidden group</option>
+  </select>
+
+  <button onclick="savePrivacy()">💾 Save Settings</button>
+
+  <div id="statusMsg"></div>
+
+  <script src="group-privacy.js"></script>
+</body>
+</html>
