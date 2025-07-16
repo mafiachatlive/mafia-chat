@@ -1,26 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>🎙️ Group Voice Recorder</title>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="supabase.js"></script>
+  <script src="/mafiachat/supabase.js"></script>
+  <link rel="stylesheet" href="/mafiachat/assets/styles.css">
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    #recordingsList audio {
-      display: block;
-      margin-top: 15px;
-      width: 100%;
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
     }
     .btn {
-      padding: 10px 15px;
-      margin: 5px;
+      padding: 10px 20px;
+      margin: 5px 10px 15px 0;
       font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #recordBtn { background-color: #28a745; color: white; }
+    #stopBtn { background-color: #dc3545; color: white; }
+    #group_id {
+      padding: 10px;
+      font-size: 16px;
+      width: 250px;
+      margin-bottom: 15px;
+    }
+    #recordingsList audio {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
     }
     iframe {
       width: 100%;
       height: 230px;
       border: none;
-      margin-top: 20px;
+      margin-top: 25px;
     }
   </style>
 </head>
@@ -29,86 +46,18 @@
   <h2>🎙️ Record & Send Group Voice Message</h2>
 
   <input type="text" id="group_id" placeholder="Enter Group ID" />
-  <br><br>
+  <br>
 
   <button id="recordBtn" class="btn">🎤 Start Recording</button>
   <button id="stopBtn" class="btn" disabled>⏹️ Stop</button>
 
   <div id="recordingsList"></div>
 
-  <!-- ✅ Emoji Picker -->
-  <iframe src="emoji-picker/emoji-picker.html"></iframe>
+  <!-- ✅ Emoji Picker iframe -->
+  <iframe src="/mafiachat/emoji/emoji-picker.html"></iframe>
 
-  <script>
-    let currentUser;
-    let mediaRecorder;
-    let audioChunks = [];
+  <!-- 🔗 JS Script -->
+  <script src="/mafiachat/scripts/group-voice.js"></script>
 
-    async function init() {
-      const user = supabase.auth.user();
-      if (!user) {
-        alert('Login required');
-        return;
-      }
-      currentUser = user;
-    }
-    init();
-
-    document.getElementById('recordBtn').addEventListener('click', async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream);
-      audioChunks = [];
-
-      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-      mediaRecorder.onstop = () => uploadVoice(new Blob(audioChunks, { type: 'audio/webm' }));
-
-      mediaRecorder.start();
-      document.getElementById('recordBtn').disabled = true;
-      document.getElementById('stopBtn').disabled = false;
-    });
-
-    document.getElementById('stopBtn').addEventListener('click', () => {
-      if (mediaRecorder) mediaRecorder.stop();
-      document.getElementById('recordBtn').disabled = false;
-      document.getElementById('stopBtn').disabled = true;
-    });
-
-    async function uploadVoice(blob) {
-      const groupId = document.getElementById('group_id').value;
-      if (!groupId) return alert('Enter Group ID');
-
-      const fileName = `voice-${Date.now()}.webm`;
-      const filePath = `groups/${groupId}/voice/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('group-media')
-        .upload(filePath, blob);
-
-      if (uploadError) return alert('❌ Upload failed');
-
-      const fileURL = supabase.storage.from('group-media').getPublicUrl(filePath).publicURL;
-
-      const { error: dbError } = await supabase
-        .from('group_chats')
-        .insert([{
-          group_id: groupId,
-          sender_id: currentUser.id,
-          type: 'voice',
-          content: fileURL,
-          delivered: false,
-          seen: false,
-          timestamp: new Date().toISOString()
-        }]);
-
-      if (dbError) return alert('❌ DB insert failed');
-
-      const audio = document.createElement('audio');
-      audio.controls = true;
-      audio.src = fileURL;
-      document.getElementById('recordingsList').appendChild(audio);
-
-      alert('✅ Voice sent!');
-    }
-  </script>
 </body>
 </html>
