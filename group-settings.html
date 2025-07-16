@@ -1,12 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Group Settings</title>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="supabase.js"></script>
+  <meta charset="UTF-8">
+  <title>⚙️ Group Settings</title>
+  <script src="/mafiachat/supabase.js"></script>
+  <link rel="stylesheet" href="/mafiachat/assets/styles.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+    h2, h3 {
+      margin-top: 30px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 12px 20px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #111;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    iframe {
+      width: 100%;
+      height: 230px;
+      border: none;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-  <h2>Group Settings</h2>
+  <h2>⚙️ Group Settings Panel</h2>
+
   <input type="text" id="group_id" placeholder="Enter Group ID" />
 
   <h3>Group Info</h3>
@@ -14,9 +55,9 @@
   <input type="text" id="group_description" placeholder="Description" />
   <input type="text" id="group_profile" placeholder="Profile Image URL" />
   <input type="text" id="group_banner" placeholder="Banner Image URL" />
-  <button onclick="updateGroupInfo()">Update Info</button>
+  <button onclick="updateGroupInfo()">💾 Update Info</button>
 
-  <h3>Member Settings</h3>
+  <h3>Member Permissions</h3>
   <label>Who can post?</label>
   <select id="can_post">
     <option value="all">All Members</option>
@@ -32,9 +73,13 @@
     <option value="owner_only">Only Owner</option>
   </select>
 
-  <button onclick="updateGroupSettings()">Save Settings</button>
+  <button onclick="updateGroupSettings()">✅ Save Settings</button>
 
   <div id="status"></div>
-  <script src="group-settings.js"></script>
+
+  <!-- ✅ Emoji Picker -->
+  <iframe src="/mafiachat/emoji/emoji-picker.html"></iframe>
+
+  <script src="/mafiachat/scripts/group-settings.js"></script>
 </body>
 </html>
