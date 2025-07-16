@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emoji Picker</title>
+  <style>
+    body { font-family: sans-serif; padding: 10px; }
+    input { width: 100%; padding: 6px; margin-bottom: 10px; }
+    #favList, #emojiList { display: flex; flex-wrap: wrap; gap: 5px; }
+    .emoji-btn {
+      font-size: 24px;
+      padding: 4px 6px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .emoji-btn:hover { background: #eee; }
+    .fav { background: #ffeeba; }
+  </style>
+</head>
+<body>
+
+  <h3>⭐ Favourite Emojis</h3>
+  <div id="favList"></div>
+
+  <h3>🔍 Search Emojis</h3>
+  <input type="text" id="emojiSearch" placeholder="Search emojis..." />
+  <div id="emojiList"></div>
+
+  <script src="emoji-picker.js"></script>
+</body>
+</html>
