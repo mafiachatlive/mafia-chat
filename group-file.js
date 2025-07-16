@@ -1,30 +1,45 @@
-let currentUser;
+// scripts/group-file.js
 
-async function init() {
+let currentUser = null;
+
+// ✅ Init user session
+async function initUser() {
   const user = supabase.auth.user();
   if (!user) {
-    alert('Login required');
+    alert('🔐 Login required to upload.');
     return;
   }
   currentUser = user;
 }
-init();
+initUser();
 
+// 📤 Upload file to group
 async function uploadFile() {
-  const groupId = document.getElementById('group_id').value;
+  const groupId = document.getElementById('group_id').value.trim();
   const file = document.getElementById('fileInput').files[0];
 
-  if (!file || !groupId) return alert('Select group ID & file');
+  if (!groupId || !file) {
+    alert("⚠️ Group ID and file required.");
+    return;
+  }
 
-  const filePath = `groups/${groupId}/files/${Date.now()}_${file.name}`;
+  const filePath = `groups/${groupId}/files/${Date.now()}-${file.name}`;
 
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabase
+    .storage
     .from('group-media')
     .upload(filePath, file);
 
-  if (uploadError) return alert('❌ Upload failed');
+  if (uploadError) {
+    alert('❌ File upload failed.');
+    return;
+  }
 
-  const fileURL = supabase.storage.from('group-media').getPublicUrl(filePath).publicURL;
+  const { publicURL } = supabase.storage
+    .from('group-media')
+    .getPublicUrl(filePath);
+
+  const timestamp = new Date().toISOString();
 
   const { error: dbError } = await supabase
     .from('group_chats')
@@ -32,38 +47,83 @@ async function uploadFile() {
       group_id: groupId,
       sender_id: currentUser.id,
       type: 'file',
-      content: fileURL
+      content: publicURL,
+      delivered: false,
+      seen: false,
+      timestamp: timestamp
     }]);
 
-  if (dbError) return alert('❌ DB insert failed');
+  if (dbError) {
+    alert('❌ Database insert failed.');
+    return;
+  }
 
-  alert('✅ File Uploaded!');
-  showFiles(groupId);
+  alert('✅ File uploaded!');
+  loadFiles(groupId);
 }
 
-document.getElementById('group_id').addEventListener('change', function () {
-  showFiles(this.value);
-});
+// 🔽 Load files
+async function loadFiles(groupId) {
+  const container = document.getElementById('fileList');
+  container.innerHTML = '';
 
-async function showFiles(groupId) {
   const { data, error } = await supabase
     .from('group_chats')
-    .select('sender_id, content, timestamp')
+    .select('*')
     .eq('group_id', groupId)
     .eq('type', 'file')
-    .order('timestamp', { ascending: false });
+    .order('timestamp', { ascending: true });
 
-  const list = document.getElementById('fileList');
-  list.innerHTML = '';
+  if (error) {
+    container.innerHTML = '❌ Error loading files.';
+    return;
+  }
 
-  if (!data || error) return;
+  data.forEach(msg => {
+    const card = document.createElement('div');
+    card.className = 'file-card';
 
-  data.forEach(f => {
-    const link = document.createElement('a');
-    link.href = f.content;
-    link.target = '_blank';
-    link.innerText = `📁 ${f.content.split('/').pop()}`;
-    list.appendChild(link);
-    list.appendChild(document.createElement('br'));
+    const tick = getTick(msg);
+    const fileName = msg.content.split('/').pop().split('?')[0];
+    const fileLink = `<a href="${msg.content}" target="_blank">${fileName}</a>`;
+
+    card.innerHTML = `
+      <strong>👤 ${msg.sender_id}</strong><br>
+      <small>${new Date(msg.timestamp).toLocaleString()}</small><br>
+      📎 ${fileLink}
+      <div class="status">${tick}</div>
+      <div class="emoji-react">❤️ 😂 😍 😭 😡</div>
+    `;
+
+    card.querySelector('.emoji-react').addEventListener('click', e => {
+      if (e.target.tagName === 'DIV') return;
+      const emoji = e.target.textContent;
+      alert(`You reacted with ${emoji} (coming soon)`);
+      // reaction logic goes here
+    });
+
+    container.appendChild(card);
+
+    if (!msg.delivered && msg.sender_id !== currentUser.id) {
+      markDelivered(msg.id);
+    }
   });
 }
+
+// ✅ Tick Status Logic
+function getTick(msg) {
+  if (msg.seen) {
+    return '✔✔ <span style="color:green;">Seen</span>';
+  } else if (msg.delivered) {
+    return '✔✔ <span style="color:blue;">Delivered</span>';
+  } else {
+    return '✔ Sent';
+  }
+}
+
+// ✅ Mark as Delivered
+async function markDelivered(id) {
+  await supabase.from('group_chats').update({ delivered: true }).eq('id', id);
+}
+
+// ✅ Mark as Seen (you can extend this on file click)
