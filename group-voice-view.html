@@ -1,24 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>🔊 Group Voice Message Viewer</title>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="supabase.js"></script>
+  <script src="/mafiachat/supabase.js"></script>
+  <link rel="stylesheet" href="/mafiachat/assets/styles.css" />
   <style>
-    body { font-family: sans-serif; padding: 20px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f8f8f8;
+    }
     .voice-card {
-      background: #f2f2f2;
+      background: #fff;
       border-radius: 10px;
       padding: 15px;
       margin-bottom: 15px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      position: relative;
     }
     audio {
       width: 100%;
       margin-top: 10px;
     }
     .status {
-      font-size: 12px;
-      color: #888;
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
     }
     iframe {
       width: 100%;
@@ -26,77 +34,28 @@
       border: none;
       margin-top: 20px;
     }
+    .emoji-react {
+      margin-top: 10px;
+      font-size: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
   <h2>🔊 Group Voice Message Viewer</h2>
 
-  <input type="text" id="group_id" placeholder="Enter Group ID" />
-  <button onclick="loadGroupVoice()">Load Voice Messages</button>
+  <input type="text" id="group_id" placeholder="Enter Group ID" style="padding:10px; width: 240px;" />
+  <button onclick="loadGroupVoice()" style="padding:10px;">Load Voice Messages</button>
 
   <div id="voiceContainer"></div>
 
-  <!-- ✅ Emoji Picker (iframe from emoji-picker folder) -->
-  <iframe src="emoji-picker/emoji-picker.html"></iframe>
+  <!-- ✅ Emoji Picker iframe -->
+  <iframe src="/mafiachat/emoji/emoji-picker.html"></iframe>
 
-  <script>
-    let currentUser;
-
-    async function loadGroupVoice() {
-      const groupId = document.getElementById('group_id').value.trim();
-      const container = document.getElementById('voiceContainer');
-      container.innerHTML = '';
-
-      const user = supabase.auth.user();
-      if (!user || !groupId) {
-        return container.innerHTML = "⚠️ Login or Group ID missing.";
-      }
-      currentUser = user;
-
-      const { data, error } = await supabase
-        .from('group_chats')
-        .select('*')
-        .eq('group_id', groupId)
-        .eq('type', 'voice')
-        .order('timestamp', { ascending: true });
-
-      if (error) {
-        container.innerHTML = '❌ Error loading messages.';
-        return;
-      }
-
-      data.forEach((msg) => {
-        const div = document.createElement('div');
-        div.className = 'voice-card';
-
-        const tick = msg.seen
-          ? '✔✔ <span style="color:green;">Seen</span>'
-          : msg.delivered
-            ? '✔✔ <span style="color:blue;">Delivered</span>'
-            : '✔ Sent';
-
-        const html = `
-          <strong>👤 ${msg.sender_id}</strong><br>
-          <small>${new Date(msg.timestamp).toLocaleString()}</small><br>
-          <audio controls src="${msg.content}" onplay="markSeen('${msg.id}')"></audio>
-          <div class="status">${tick}</div>
-        `;
-        div.innerHTML = html;
-        container.appendChild(div);
-
-        if (!msg.delivered && msg.sender_id !== currentUser.id) {
-          markDelivered(msg.id);
-        }
-      });
-    }
-
-    async function markDelivered(id) {
-      await supabase.from('group_chats').update({ delivered: true }).eq('id', id);
-    }
-
-    async function markSeen(id) {
-      await supabase.from('group_chats').update({ seen: true }).eq('id', id);
-    }
-  </script>
+  <script src="/mafiachat/scripts/group-voice-view.js"></script>
 </body>
 </html>
