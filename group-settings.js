@@ -1,39 +1,62 @@
-const user = supabase.auth.user();
+// /mafiachat/scripts/group-settings.js
+
+let currentUser = null;
+
+async function initUser() {
+  const user = supabase.auth.user();
+  if (!user) {
+    document.getElementById("status").textContent = "🔐 Please log in first.";
+    return;
+  }
+  currentUser = user;
+}
+initUser();
 
 async function updateGroupInfo() {
-  const groupId = document.getElementById('group_id').value;
-  const name = document.getElementById('group_name').value;
-  const desc = document.getElementById('group_description').value;
-  const profile = document.getElementById('group_profile').value;
-  const banner = document.getElementById('group_banner').value;
+  const group_id = document.getElementById("group_id").value.trim();
+  const name = document.getElementById("group_name").value.trim();
+  const desc = document.getElementById("group_description").value.trim();
+  const profile = document.getElementById("group_profile").value.trim();
+  const banner = document.getElementById("group_banner").value.trim();
 
-  const { error } = await supabase
-    .from('groups')
-    .update({
-      name: name,
-      description: desc,
-      profile_url: profile,
-      banner_url: banner
-    })
-    .eq('id', groupId)
-    .eq('owner_id', user.id);
+  if (!group_id || !name) {
+    return showStatus("❌ Group ID and Name are required");
+  }
 
-  document.getElementById('status').innerText = error ? error.message : 'Group Info Updated';
+  const { error } = await supabase.from("groups").update({
+    name,
+    description: desc,
+    profile_image: profile,
+    banner_image: banner,
+    updated_at: new Date().toISOString()
+  }).eq("id", group_id);
+
+  if (error) return showStatus("❌ Failed to update group info");
+
+  showStatus("✅ Group info updated!");
 }
 
 async function updateGroupSettings() {
-  const groupId = document.getElementById('group_id').value;
-  const postRule = document.getElementById('can_post').value;
-  const viewRule = document.getElementById('can_see_members').value;
+  const group_id = document.getElementById("group_id").value.trim();
+  const can_post = document.getElementById("can_post").value;
+  const can_see = document.getElementById("can_see_members").value;
 
-  const { error } = await supabase
-    .from('groups')
-    .update({
-      can_post: postRule,
-      can_see_members: viewRule
-    })
-    .eq('id', groupId)
-    .eq('owner_id', user.id);
+  if (!group_id) return showStatus("❌ Group ID required");
 
-  document.getElementById('status').innerText = error ? error.message : 'Settings Updated';
+  const { error } = await supabase.from("groups").update({
+    permissions: {
+      can_post,
+      can_see_members: can_see
+    },
+    updated_at: new Date().toISOString()
+  }).eq("id", group_id);
+
+  if (error) return showStatus("❌ Failed to save group settings");
+
+  showStatus("✅ Settings saved!");
+}
+
+// Utility: Show status
+function showStatus(msg) {
+  document.getElementById("status").innerHTML = msg;
 }
