@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>🔊 View Group Voice Messages</title>
+  <title>🔊 Group Voice Message Viewer</title>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
   <script src="supabase.js"></script>
   <style>
@@ -16,6 +16,16 @@
       width: 100%;
       margin-top: 10px;
     }
+    .status {
+      font-size: 12px;
+      color: #888;
+    }
+    iframe {
+      width: 100%;
+      height: 230px;
+      border: none;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -26,6 +36,67 @@
 
   <div id="voiceContainer"></div>
 
-  <script src="group-voice-view.js"></script>
+  <!-- ✅ Emoji Picker (iframe from emoji-picker folder) -->
+  <iframe src="emoji-picker/emoji-picker.html"></iframe>
+
+  <script>
+    let currentUser;
+
+    async function loadGroupVoice() {
+      const groupId = document.getElementById('group_id').value.trim();
+      const container = document.getElementById('voiceContainer');
+      container.innerHTML = '';
+
+      const user = supabase.auth.user();
+      if (!user || !groupId) {
+        return container.innerHTML = "⚠️ Login or Group ID missing.";
+      }
+      currentUser = user;
+
+      const { data, error } = await supabase
+        .from('group_chats')
+        .select('*')
+        .eq('group_id', groupId)
+        .eq('type', 'voice')
+        .order('timestamp', { ascending: true });
+
+      if (error) {
+        container.innerHTML = '❌ Error loading messages.';
+        return;
+      }
+
+      data.forEach((msg) => {
+        const div = document.createElement('div');
+        div.className = 'voice-card';
+
+        const tick = msg.seen
+          ? '✔✔ <span style="color:green;">Seen</span>'
+          : msg.delivered
+            ? '✔✔ <span style="color:blue;">Delivered</span>'
+            : '✔ Sent';
+
+        const html = `
+          <strong>👤 ${msg.sender_id}</strong><br>
+          <small>${new Date(msg.timestamp).toLocaleString()}</small><br>
+          <audio controls src="${msg.content}" onplay="markSeen('${msg.id}')"></audio>
+          <div class="status">${tick}</div>
+        `;
+        div.innerHTML = html;
+        container.appendChild(div);
+
+        if (!msg.delivered && msg.sender_id !== currentUser.id) {
+          markDelivered(msg.id);
+        }
+      });
+    }
+
+    async function markDelivered(id) {
+      await supabase.from('group_chats').update({ delivered: true }).eq('id', id);
+    }
+
+    async function markSeen(id) {
+      await supabase.from('group_chats').update({ seen: true }).eq('id', id);
+    }
+  </script>
 </body>
 </html>
