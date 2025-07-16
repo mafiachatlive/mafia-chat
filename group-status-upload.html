@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>📤 Group Status Upload</title>
+  <script src="/mafiachat/supabase.js"></script>
+  <link rel="stylesheet" href="/mafiachat/assets/styles.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      margin-top: 5px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    #recordBtn, #stopBtn {
+      width: 48%;
+      display: inline-block;
+    }
+    audio {
+      margin-top: 10px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>📤 Upload Group Status</h2>
+
+    <label>Group ID</label>
+    <input type="text" id="group_id" placeholder="e.g. mafia123" />
+
+    <label>Text Status</label>
+    <textarea id="textStatus" rows="3" placeholder="Type something..."></textarea>
+
+    <label>Upload Image / Video / Audio</label>
+    <input type="file" id="mediaInput" accept="image/*,video/*,audio/*" />
+
+    <label>🎙️ Record Voice Status</label>
+    <button id="recordBtn">🎤 Start Recording</button>
+    <button id="stopBtn" disabled>⏹️ Stop</button>
+    <audio id="voicePreview" controls></audio>
+
+    <label>Status Expiry (Auto Delete)</label>
+    <select id="expiry">
+      ${[...Array(30)].map((_, i) => `<option value="${i+1}">${i+1} day(s)</option>`).join('')}
+    </select>
+
+    <br><br>
+    <button onclick="uploadStatus()">🚀 Upload Status</button>
+  </div>
+
+  <script src="/mafiachat/scripts/group-status-upload.js"></script>
+</body>
+</html>
