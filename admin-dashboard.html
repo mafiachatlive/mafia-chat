@@ -1,19 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Mafia Admin Dashboard</title>
-  <script src="https://unpkg.com/@supabase/supabase-js"></script>
-  <script src="supabase.js"></script>
+  <meta charset="UTF-8">
+  <title>👑 Mafia Admin Dashboard</title>
+  <script src="/mafiachat/supabase.js"></script>
+  <link rel="stylesheet" href="/mafiachat/assets/styles.css">
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 10px; }
-    button { margin-right: 10px; }
+    body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+    h2, h3 { color: #111; }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    button {
+      background: #111; color: white; cursor: pointer;
+    }
+    button:hover { background: #000; }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .status {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    iframe {
+      width: 100%;
+      height: 230px;
+      border: none;
+      margin-top: 30px;
+    }
   </style>
 </head>
 <body>
-  <h2>Admin Dashboard</h2>
+  <h2>👑 Mafia Admin Dashboard</h2>
+
   <input type="text" id="group_id" placeholder="Enter Group ID" />
-  <button onclick="loadReports()">Load Reports</button>
+  <button onclick="loadReports()">📂 Load Reports</button>
 
   <h3>🚨 Flagged Messages</h3>
   <div id="flaggedMessages"></div>
@@ -21,6 +52,9 @@
   <h3>📁 Media Logs</h3>
   <div id="mediaLogs"></div>
 
-  <script src="admin-dashboard.js"></script>
+  <!-- ✅ Emoji Picker -->
+  <iframe src="/mafiachat/emoji/emoji-picker.html"></iframe>
+
+  <script src="/mafiachat/scripts/admin-dashboard.js"></script>
 </body>
 </html>
