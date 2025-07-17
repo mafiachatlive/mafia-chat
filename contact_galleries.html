@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Galleries</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Contact Galleries</h1>
+
+  <form id="contactGalleryForm">
+    <input type="text" id="contact_id" placeholder="Contact ID" required />
+    <select id="gallery_type" required>
+      <option value="">Select Gallery Type</option>
+      <option value="images">Images</option>
+      <option value="videos">Videos</option>
+      <option value="files">Files</option>
+    </select>
+    <input type="text" id="title" placeholder="Gallery Title" required />
+    <button type="submit">Add Gallery</button>
+  </form>
+
+  <ul id="contactGalleryList"></ul>
+
+  <script type="module" src="./supabase.js"></script>
+  <script type="module" src="./contact_galleries.js"></script>
+</body>
+</html>
