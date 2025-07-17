@@ -1,0 +1,33 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mafia Chat Login</title>
+</head>
+<body>
+  <h2>Phone OTP Login</h2>
+  <input type="text" id="phone" placeholder="+923001234567">
+  <button onclick="send()">Send OTP</button>
+
+  <div style="margin-top:20px;">
+    <input type="text" id="otp" placeholder="Enter OTP">
+    <button onclick="verify()">Verify OTP</button>
+  </div>
+
+  <script type="module">
+    import { sendOTP, verifyOTP } from './js/auth.js'
+
+    window.send = () => {
+      const phone = document.getElementById('phone').value
+      sendOTP(phone)
+    }
+
+    window.verify = () => {
+      const phone = document.getElementById('phone').value
+      const otp = document.getElementById('otp').value
+      verifyOTP(phone, otp)
+    }
+  </script>
+</body>
+</html>
