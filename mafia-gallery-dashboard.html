@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mafia Gallery Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #0e1b30;
+      color: white;
+    }
+    nav {
+      background: #1c2b45;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 10px;
+      gap: 10px;
+    }
+    nav button {
+      background: #1e3a8a;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    nav button:hover, nav button.active {
+      background: #2563eb;
+    }
+    .submenu {
+      margin-left: 10px;
+    }
+    section {
+      display: none;
+      padding: 20px;
+    }
+    section.active {
+      display: block;
+    }
+    h2 {
+      color: #60a5fa;
+      border-bottom: 1px solid #60a5fa;
+      padding-bottom: 5px;
+    }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <button onclick="showTab('contacts')" class="active">Contacts</button>
+    <button onclick="showTab('contact_galleries')">Contact Galleries</button>
+    <div class="submenu">
+      <button onclick="showTab('gallery_images')">Gallery Images</button>
+      <button onclick="showTab('gallery_videos')">Gallery Videos</button>
+      <button onclick="showTab('gallery_files')">Gallery Files</button>
+      <button onclick="showTab('gallery_notes')">Gallery Notes</button>
+    </div>
+  </nav>
+
+  <section id="contacts" class="active">
+    <h2>Contacts</h2>
+    <ul id="contacts-list">Loading...</ul>
+  </section>
+
+  <section id="contact_galleries">
+    <h2>Contact Galleries</h2>
+    <ul id="contact-galleries-list">Loading...</ul>
+  </section>
+
+  <section id="gallery_images">
+    <h2>Gallery Images</h2>
+    <ul id="gallery-images-list">Loading...</ul>
+  </section>
+
+  <section id="gallery_videos">
+    <h2>Gallery Videos</h2>
+    <ul id="gallery-videos-list">Loading...</ul>
+  </section>
+
+  <section id="gallery_files">
+    <h2>Gallery Files</h2>
+    <ul id="gallery-files-list">Loading...</ul>
+  </section>
+
+  <section id="gallery_notes">
+    <h2>Gallery Notes</h2>
+    <ul id="gallery-notes-list">Loading...</ul>
+  </section>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://mafiachatlive-default-rtdb.asia-southeast1.firebasedatabase.app', 
+      'AIzaSyB3qEXB3nh8CHCTQ2PBPLA-CgUDLyN0f4M'
+    );
+
+    function showTab(tabId) {
+      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('nav button')).find(btn => btn.textContent.toLowerCase().includes(tabId.replace('_', ' ')));
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    async function loadData(table, elementId) {
+      const { data, error } = await supabase.from(table).select('*');
+      const list = document.getElementById(elementId);
+      list.innerHTML = '';
+      if (error) {
+        list.innerHTML = `<li>Error: ${error.message}</li>`;
+      } else {
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = JSON.stringify(item);
+          list.appendChild(li);
+        });
+        if (data.length === 0) list.innerHTML = '<li>No records found.</li>';
+      }
+    }
+
+    loadData('contacts', 'contacts-list');
+    loadData('contact_galleries', 'contact-galleries-list');
+    loadData('gallery_images', 'gallery-images-list');
+    loadData('gallery_videos', 'gallery-videos-list');
+    loadData('gallery_files', 'gallery-files-list');
+    loadData('gallery_notes', 'gallery-notes-list');
+  </script>
+</body>
+</html>
