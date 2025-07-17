@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery Notes</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    textarea, input, button {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .note {
+      background: #f0f0f0;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Add New Note</h2>
+  <input type="text" id="title" placeholder="Note Title" />
+  <textarea id="description" placeholder="Note Description"></textarea>
+  <button onclick="addNote()">Save Note</button>
+
+  <h2>All Notes</h2>
+  <div id="notesContainer"></div>
+
+  <script type="module" src="supabase.js"></script>
+  <script type="module" src="gallery_notes.js"></script>
+</body>
+</html>
