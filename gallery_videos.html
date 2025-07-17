@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery Videos</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    .video-container { margin-bottom: 20px; }
+    iframe, video { width: 100%; max-width: 600px; height: auto; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Gallery Videos</h1>
+  <div id="videos-list">Loading videos...</div>
+
+  <script type="module" src="supabase.js"></script>
+  <script type="module" src="gallery_videos.js"></script>
+</body>
+</html>
