@@ -2,100 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mafia Chat Dashboard</title>
   <style>
     body {
-      background-color: #0a0a0a;
-      color: white;
+      background: #000;
+      color: #fff;
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 40px 20px;
     }
-
     h1 {
       text-align: center;
-      padding: 20px;
-      color: #ff007f;
+      margin-bottom: 30px;
+      color: #00ff88;
     }
-
-    .grid-container {
+    .button-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 20px;
-      padding: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      max-width: 1000px;
+      margin: 0 auto;
     }
-
-    .grid-item {
-      background-color: #1a1a1a;
-      border-radius: 12px;
-      padding: 10px;
+    .btn {
+      background-color: #111;
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      padding: 15px;
       text-align: center;
-      transition: transform 0.2s;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
-    }
-
-    .grid-item:hover {
-      transform: scale(1.05);
-    }
-
-    .grid-item img {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 8px;
-    }
-
-    .grid-item span {
-      font-size: 14px;
-      color: #ffffff;
-    }
-
-    a {
       text-decoration: none;
+      font-weight: bold;
+      border-radius: 10px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn:hover {
+      background-color: #00ff88;
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <h1>💬 Mafia Chat Dashboard</h1>
-  <div class="grid-container">
-    <!-- Grid items: each links to a page -->
-    <a href="chatfile.html" class="grid-item"><img src="icons/chatfile.png"><span>Chat File</span></a>
-    <a href="chatmedia.html" class="grid-item"><img src="icons/chatmedia.png"><span>Chat Media</span></a>
-    <a href="chattext.html" class="grid-item"><img src="icons/chattext.png"><span>Chat Text</span></a>
-    <a href="chatvoice.html" class="grid-item"><img src="icons/chatvoice.png"><span>Chat Voice</span></a>
-    <a href="chatvoiceview.html" class="grid-item"><img src="icons/chatvoiceview.png"><span>Chat Voice View</span></a>
-    <a href="chatroom.html" class="grid-item"><img src="icons/chatroom.png"><span>Chat Room</span></a>
-    <a href="contactgalleries.html" class="grid-item"><img src="icons/contactgalleries.png"><span>Contact Galleries</span></a>
-    <a href="contacts.html" class="grid-item"><img src="icons/contacts.png"><span>Contacts</span></a>
-    <a href="emojipicker.html" class="grid-item"><img src="icons/emojipicker.png"><span>Emoji Picker</span></a>
-    <a href="emoji.html" class="grid-item"><img src="icons/emoji.png"><span>Emoji</span></a>
-    <a href="galleryfiles.html" class="grid-item"><img src="icons/galleryfiles.png"><span>Gallery Files</span></a>
-    <a href="galleryimages.html" class="grid-item"><img src="icons/galleryimages.png"><span>Gallery Images</span></a>
-    <a href="gallerynotes.html" class="grid-item"><img src="icons/gallerynotes.png"><span>Gallery Notes</span></a>
-    <a href="galleryvideos.html" class="grid-item"><img src="icons/galleryvideos.png"><span>Gallery Videos</span></a>
-    <a href="groupaudiocall.html" class="grid-item"><img src="icons/groupaudiocall.png"><span>Group Audio Call</span></a>
-    <a href="groupbanlist.html" class="grid-item"><img src="icons/groupbanlist.png"><span>Group Ban List</span></a>
-    <a href="groupcall.html" class="grid-item"><img src="icons/groupcall.png"><span>Group Call</span></a>
-    <a href="groupchat.html" class="grid-item"><img src="icons/groupchat.png"><span>Group Chat</span></a>
-    <a href="groupcreate.html" class="grid-item"><img src="icons/groupcreate.png"><span>Group Create</span></a>
-    <a href="groupfile.html" class="grid-item"><img src="icons/groupfile.png"><span>Group File</span></a>
-    <a href="groupinvite.html" class="grid-item"><img src="icons/groupinvite.png"><span>Group Invite</span></a>
-    <a href="groupmedia.html" class="grid-item"><img src="icons/groupmedia.png"><span>Group Media</span></a>
-    <a href="groupmembers.html" class="grid-item"><img src="icons/groupmembers.png"><span>Group Members</span></a>
-    <a href="grouppin.html" class="grid-item"><img src="icons/grouppin.png"><span>Group Pin</span></a>
-    <a href="groupprivacy.html" class="grid-item"><img src="icons/groupprivacy.png"><span>Group Privacy</span></a>
-    <a href="grouprequests.html" class="grid-item"><img src="icons/grouprequests.png"><span>Group Requests</span></a>
-    <a href="groupsettings.html" class="grid-item"><img src="icons/groupsettings.png"><span>Group Settings</span></a>
-    <a href="groupstatusupload.html" class="grid-item"><img src="icons/groupstatusupload.png"><span>Group Status Upload</span></a>
-    <a href="groupstatusview.html" class="grid-item"><img src="icons/groupstatusview.png"><span>Group Status View</span></a>
-    <a href="groupvoiceview.html" class="grid-item"><img src="icons/groupvoiceview.png"><span>Group Voice View</span></a>
-    <a href="groupvoice.html" class="grid-item"><img src="icons/groupvoice.png"><span>Group Voice</span></a>
-    <a href="location.html" class="grid-item"><img src="icons/location.png"><span>Location</span></a>
-    <a href="mafiagallerydashboard.html" class="grid-item"><img src="icons/mafiagallerydashboard.png"><span>Mafia Gallery</span></a>
-    <a href="statusview.html" class="grid-item"><img src="icons/statusview.png"><span>Status View</span></a>
-    <a href="status.html" class="grid-item"><img src="icons/status.png"><span>Status</span></a>
-    <a href="videochat.html" class="grid-item"><img src="icons/videochat.png"><span>Video Chat</span></a>
+  <h1>🔥 Mafia Chat Dashboard 🔥</h1>
+  <div class="button-list">
+    <a class="btn" href="chatfile.html">Chat File</a>
+    <a class="btn" href="chatmedia.html">Chat Media</a>
+    <a class="btn" href="chattext.html">Chat Text</a>
+    <a class="btn" href="chatvoice.html">Chat Voice</a>
+    <a class="btn" href="chatvoiceview.html">Chat Voice View</a>
+    <a class="btn" href="chatroom.html">Chat Room</a>
+    <a class="btn" href="contactgalleries.html">Contact Galleries</a>
+    <a class="btn" href="contacts.html">Contacts</a>
+    <a class="btn" href="emojipicker.html">Emoji Picker</a>
+    <a class="btn" href="emoji.html">Emoji</a>
+    <a class="btn" href="galleryfiles.html">Gallery Files</a>
+    <a class="btn" href="galleryimages.html">Gallery Images</a>
+    <a class="btn" href="gallerynotes.html">Gallery Notes</a>
+    <a class="btn" href="galleryvideos.html">Gallery Videos</a>
+    <a class="btn" href="groupaudiocall.html">Group Audio Call</a>
+    <a class="btn" href="groupbanlist.html">Group Ban List</a>
+    <a class="btn" href="groupcall.html">Group Call</a>
+    <a class="btn" href="groupchat.html">Group Chat</a>
+    <a class="btn" href="groupcreate.html">Group Create</a>
+    <a class="btn" href="groupfile.html">Group File</a>
+    <a class="btn" href="groupinvite.html">Group Invite</a>
+    <a class="btn" href="groupmedia.html">Group Media</a>
+    <a class="btn" href="groupmembers.html">Group Members</a>
+    <a class="btn" href="grouppin.html">Group Pin</a>
+    <a class="btn" href="groupprivacy.html">Group Privacy</a>
+    <a class="btn" href="grouprequests.html">Group Requests</a>
+    <a class="btn" href="groupsettings.html">Group Settings</a>
+    <a class="btn" href="groupstatusupload.html">Group Status Upload</a>
+    <a class="btn" href="groupstatusview.html">Group Status View</a>
+    <a class="btn" href="groupvoiceview.html">Group Voice View</a>
+    <a class="btn" href="groupvoice.html">Group Voice</a>
+    <a class="btn" href="location.html">Location</a>
+    <a class="btn" href="mafiagallerydashboard.html">Mafia Gallery Dashboard</a>
+    <a class="btn" href="statusview.html">Status View</a>
+    <a class="btn" href="status.html">Status</a>
+    <a class="btn" href="videochat.html">Video Chat</a>
   </div>
 </body>
 </html>
