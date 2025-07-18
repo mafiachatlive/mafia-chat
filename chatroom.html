@@ -136,7 +136,9 @@
       display: flex;
       padding: 10px;
       background: #111;
-      z-index: 900; /* Ensure input area is below footer but above content */
+      position: sticky;
+      bottom: 50px; /* Position above footer */
+      z-index: 900; /* Below footer, above content */
     }
 
     .input-area input {
@@ -160,7 +162,7 @@
 
     .floating-mafia {
       position: fixed;
-      bottom: 120px; /* Adjusted to avoid overlap with input and footer */
+      bottom: 140px; /* Adjusted to avoid overlap with input and footer */
       right: 20px;
       width: 56px;
       height: 56px;
@@ -183,7 +185,10 @@
       background: #1a1a1a;
       padding: 10px 0;
       border-top: 1px solid #333;
-      position: relative;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
     }
 
@@ -226,10 +231,12 @@
       }
       .input-area {
         padding: 8px;
-        position: relative; /* Ensure input stays above content */
+        position: sticky;
+        bottom: 40px; /* Adjusted for mobile */
+        z-index: 900;
       }
       .floating-mafia {
-        bottom: 110px; /* Adjusted for mobile */
+        bottom: 130px; /* Adjusted for mobile */
         width: 48px;
         height: 48px;
         font-size: 12px;
@@ -245,7 +252,7 @@
         z-index: 1000;
       }
       .chat-container {
-        padding-bottom: 80px; /* Increased to ensure input area is visible */
+        padding-bottom: 90px; /* Increased to ensure input area visibility */
       }
     }
 
@@ -262,13 +269,14 @@
         font-size: 12px;
       }
       .floating-mafia {
-        bottom: 100px; /* Adjusted for smaller screens */
+        bottom: 120px; /* Adjusted for smaller screens */
       }
       .input-area {
         padding: 6px;
+        bottom: 36px; /* Fine-tuned for smaller screens */
       }
       .chat-container {
-        padding-bottom: 70px; /* Adjusted for smaller screens */
+        padding-bottom: 80px; /* Adjusted for smaller screens */
       }
     }
   </style>
