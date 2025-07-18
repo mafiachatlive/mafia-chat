@@ -3,162 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mafia Chat</title>
+  <title>Mafia Chat Room</title>
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
       background: #000;
-      font-family: sans-serif;
-      color: white;
+      color: #fff;
       overflow-x: hidden;
     }
 
-    .header {
+    header {
+      background: linear-gradient(45deg, #000, gold);
+      padding: 20px;
       text-align: center;
-      padding: 10px 0;
-      background-color: #111;
-    }
-
-    .header img {
-      width: 80px;
-      height: auto;
-    }
-
-    .top-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 10px 0;
-    }
-
-    .top-buttons a {
-      background: #222;
       color: gold;
-      padding: 10px 12px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-size: 14px;
-      border: 1px solid gold;
+      position: relative;
     }
 
-    .main-logo {
-      width: 160px;
-      display: block;
-      margin: 15px auto 5px;
-      filter: drop-shadow(0 0 8px gold);
-    }
-
-    .nav-tabs {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      background: #111;
-      border-top: 1px solid #333;
-      border-bottom: 1px solid #333;
-    }
-
-    .nav-tabs span {
-      flex: 1;
-      text-align: center;
-      color: white;
-      padding: 8px 0;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .bubble {
-      position: fixed;
-      bottom: 90px;
-      right: 15px;
-      background: gold;
-      color: #000;
-      border-radius: 50%;
+    .eagle {
       width: 60px;
-      height: 60px;
-      font-size: 12px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 10px gold;
+      height: auto;
+      margin-bottom: 5px;
     }
 
-    .footer-tabs {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #111;
+    .header-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .menu-buttons {
       display: flex;
       justify-content: space-around;
+      background: #111;
       padding: 10px 0;
-      border-top: 1px solid #333;
+      border-top: 2px solid gold;
+      border-bottom: 2px solid gold;
     }
 
-    .footer-tabs span {
+    .menu-buttons button {
+      background: linear-gradient(145deg, #e91e63, gold);
+      border: none;
+      padding: 8px 14px;
       color: white;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 14px;
+      border-radius: 20px;
       cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .menu-buttons button:hover {
+      background: linear-gradient(145deg, gold, #e91e63);
+      color: black;
+    }
+
+    .contacts-box {
+      background: linear-gradient(to right, #e91e63, gold);
+      border-radius: 20px;
+      padding: 20px 10px;
+      margin: 20px 10px;
+      color: black;
+      text-align: center;
+    }
+
+    .contacts-box small {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .contacts-box iframe {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .floating-bubble {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(to bottom right, gold, #e91e63);
+      color: black;
+      padding: 12px 18px;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+      animation: float 2s ease-in-out infinite;
+      z-index: 99;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     @media (max-width: 600px) {
-      .header img {
-        width: 60px;
+      .header-title {
+        font-size: 20px;
       }
 
-      .main-logo {
-        width: 120px;
-      }
-
-      .top-buttons a {
-        font-size: 12px;
-        padding: 8px 10px;
-      }
-
-      .bubble {
+      .eagle {
         width: 50px;
-        height: 50px;
-        font-size: 10px;
       }
 
-      .footer-tabs span,
-      .nav-tabs span {
-        font-size: 11px;
+      .menu-buttons button {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      .contacts-box iframe {
+        height: 300px;
+      }
+
+      .floating-bubble {
+        padding: 10px 16px;
+        font-size: 14px;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png" alt="Mafia Chat Logo" />
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Golden_Eagle_in_flight_-_5.jpg/800px-Golden_Eagle_in_flight_-_5.jpg" alt="Mafia Eagle" class="eagle" />
+    <div class="header-title">Mafia Chat</div>
+  </header>
+
+  <div class="menu-buttons">
+    <button>Chat</button>
+    <button>Status</button>
+    <button>Groups</button>
+    <button>Calls</button>
   </div>
 
-  <div class="top-buttons">
-    <a href="https://www.mafiaresell.com" target="_blank">Earn with Mafia Resell</a>
-    <a href="https://www.mafiaresell.com" target="_blank">Shopping from Mafia</a>
-    <a href="https://www.mafiaresell.com" target="_blank">Bulk Purchase from Mafia</a>
+  <div class="contacts-box">
+    <small>Mafia</small>
+    <iframe src="contacts.html"></iframe>
   </div>
 
-  <img class="main-logo" src="https://i.ibb.co/jH8LgZm/eagle-golden-3d.png" alt="Eagle Logo" />
-
-  <div class="nav-tabs">
-    <span>Chat</span>
-    <span>Status</span>
-    <span>Groups</span>
-    <span>Calls</span>
-  </div>
-
-  <div class="bubble">Mafia</div>
-
-  <div class="footer-tabs">
-    <span>All</span>
-    <span>Family</span>
-    <span>Friends</span>
-    <span>Business</span>
-  </div>
+  <div class="floating-bubble">Mafia</div>
 
 </body>
 </html>
