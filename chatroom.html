@@ -30,10 +30,17 @@
       padding: 12px;
       background: #1a1a1a;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
       position: relative;
       box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
 
     .eagle-logo {
@@ -49,6 +56,56 @@
       font-weight: bold;
       color: gold;
       text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700;
+    }
+
+    .header-buttons {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    .header-buttons button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 8px;
+      transition: color 0.3s;
+    }
+
+    .header-buttons button.active {
+      color: gold;
+      text-shadow: 0 0 5px gold;
+    }
+
+    .link-buttons {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 10px 0;
+      background: #111;
+    }
+
+    .link-buttons a {
+      background: gold;
+      color: black;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      flex: 1;
+      margin: 0 5px;
+      transition: transform 0.2s;
+    }
+
+    .link-buttons a:hover {
+      transform: scale(1.05);
     }
 
     .messages {
@@ -145,11 +202,42 @@
       .header .title {
         font-size: 20px;
       }
+      .eagle-logo {
+        width: 40px;
+        height: 40px;
+      }
+      .header-buttons button {
+        font-size: 14px;
+        padding: 6px;
+      }
+      .link-buttons a {
+        font-size: 12px;
+        padding: 6px 8px;
+        margin: 0 3px;
+      }
       .message {
         font-size: 14px;
       }
       .input-area input {
         font-size: 14px;
+      }
+      .floating-mafia {
+        width: 48px;
+        height: 48px;
+        font-size: 12px;
+        bottom: 70px;
+        right: 15px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .header-buttons button {
+        font-size: 12px;
+        padding: 5px;
+      }
+      .link-buttons a {
+        font-size: 10px;
+        padding: 5px 6px;
       }
     }
   </style>
@@ -158,10 +246,23 @@
 
   <div class="chat-container">
     
-    <!-- Header with Golden Eagle -->
+    <!-- Header with Golden Eagle and Buttons -->
     <div class="header">
-      <div class="eagle-logo"></div>
-      <div class="title">Mafia Chat</div>
+      <div class="header-top">
+        <div class="eagle-logo"></div>
+        <div class="title">Mafia Chat</div>
+      </div>
+      <div class="header-buttons">
+        <button class="active">Chats</button>
+        <button>Status</button>
+        <button>Groups</button>
+        <button>Calls</button>
+      </div>
+      <div class="link-buttons">
+        <a href="https://mafiaresell.com" target="_blank">Earn with Mafia Resell</a>
+        <a href="https://mafiaresell.com" target="_blank">Shopping From Mafia</a>
+        <a href="https://mafiaresell.com" target="_blank">Bulk Purchase From Mafia</a>
+      </div>
     </div>
 
     <!-- Messages -->
