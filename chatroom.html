@@ -2,84 +2,162 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mafia Chat Room</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mafia Chat</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0b0b0b;
+      padding: 0;
+      background: #000;
+      font-family: sans-serif;
       color: white;
+      overflow-x: hidden;
     }
 
     .header {
-      background-color: #111;
-      padding: 10px 0;
       text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      border-bottom: 1px solid #444;
+      padding: 10px 0;
+      background-color: #111;
+    }
+
+    .header img {
+      width: 80px;
+      height: auto;
     }
 
     .top-buttons {
       display: flex;
-      justify-content: space-around;
-      padding: 12px 10px;
-      background-color: #1a1a1a;
-      border-bottom: 1px solid #333;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0;
     }
 
     .top-buttons a {
-      text-decoration: none;
-      color: #fff;
-      background-color: #333;
-      padding: 10px 18px;
+      background: #222;
+      color: gold;
+      padding: 10px 12px;
       border-radius: 10px;
-      font-weight: 500;
-      transition: background-color 0.3s;
-    }
-
-    .top-buttons a:hover {
-      background-color: #444;
-    }
-
-    #chatContainer {
-      padding: 20px;
-      height: calc(100vh - 160px);
-      overflow-y: auto;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 15px;
-      background-color: #111;
+      text-decoration: none;
       font-size: 14px;
-      color: #aaa;
+      border: 1px solid gold;
+    }
+
+    .main-logo {
+      width: 160px;
+      display: block;
+      margin: 15px auto 5px;
+      filter: drop-shadow(0 0 8px gold);
+    }
+
+    .nav-tabs {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background: #111;
       border-top: 1px solid #333;
+      border-bottom: 1px solid #333;
+    }
+
+    .nav-tabs span {
+      flex: 1;
+      text-align: center;
+      color: white;
+      padding: 8px 0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .bubble {
+      position: fixed;
+      bottom: 90px;
+      right: 15px;
+      background: gold;
+      color: #000;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 12px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px gold;
+    }
+
+    .footer-tabs {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #333;
+    }
+
+    .footer-tabs span {
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .header img {
+        width: 60px;
+      }
+
+      .main-logo {
+        width: 120px;
+      }
+
+      .top-buttons a {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      .bubble {
+        width: 50px;
+        height: 50px;
+        font-size: 10px;
+      }
+
+      .footer-tabs span,
+      .nav-tabs span {
+        font-size: 11px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">💬 Mafia Chat</div>
+  <div class="header">
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png" alt="Mafia Chat Logo" />
+  </div>
 
-  <!-- Top Navigation Buttons -->
   <div class="top-buttons">
-    <a href="/chatroom.html">Chat</a>
-    <a href="/status.html">Status</a>
-    <a href="/groups.html">Groups</a>
-    <a href="/calls.html">Calls</a>
+    <a href="https://www.mafiaresell.com" target="_blank">Earn with Mafia Resell</a>
+    <a href="https://www.mafiaresell.com" target="_blank">Shopping from Mafia</a>
+    <a href="https://www.mafiaresell.com" target="_blank">Bulk Purchase from Mafia</a>
   </div>
 
-  <!-- Chat Area -->
-  <div id="chatContainer">
-    <!-- Chat messages will go here -->
-    <p>Welcome to the Mafia Chat Room. Chat messages will be displayed here.</p>
+  <img class="main-logo" src="https://i.ibb.co/jH8LgZm/eagle-golden-3d.png" alt="Eagle Logo" />
+
+  <div class="nav-tabs">
+    <span>Chat</span>
+    <span>Status</span>
+    <span>Groups</span>
+    <span>Calls</span>
   </div>
 
-  <!-- Footer -->
-  <div class="footer">
-    &copy; 2025 Mafia Chat | Powered by Tech Praa
+  <div class="bubble">Mafia</div>
+
+  <div class="footer-tabs">
+    <span>All</span>
+    <span>Family</span>
+    <span>Friends</span>
+    <span>Business</span>
   </div>
 
 </body>
