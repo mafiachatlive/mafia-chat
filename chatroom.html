@@ -34,6 +34,7 @@
       align-items: center;
       position: relative;
       box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+      z-index: 1100; /* Higher than other elements */
     }
 
     .header-top {
@@ -137,8 +138,8 @@
       padding: 10px;
       background: #111;
       position: sticky;
-      bottom: 50px; /* Position above footer */
-      z-index: 900; /* Below footer, above content */
+      bottom: 50px;
+      z-index: 900;
     }
 
     .input-area input {
@@ -162,7 +163,7 @@
 
     .floating-mafia {
       position: fixed;
-      bottom: 140px; /* Adjusted to avoid overlap with input and footer */
+      bottom: 140px;
       right: 20px;
       width: 56px;
       height: 56px;
@@ -207,6 +208,17 @@
     }
 
     @media (max-width: 600px) {
+      .header {
+        position: fixed; /* Fix header to top on mobile */
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1100;
+      }
+      .chat-container {
+        padding-top: 150px; /* Add padding to account for fixed header height */
+        padding-bottom: 90px;
+      }
       .header .title {
         font-size: 20px;
       }
@@ -232,11 +244,11 @@
       .input-area {
         padding: 8px;
         position: sticky;
-        bottom: 40px; /* Adjusted for mobile */
+        bottom: 40px;
         z-index: 900;
       }
       .floating-mafia {
-        bottom: 130px; /* Adjusted for mobile */
+        bottom: 130px;
         width: 48px;
         height: 48px;
         font-size: 12px;
@@ -251,12 +263,20 @@
         background: #1a1a1a;
         z-index: 1000;
       }
-      .chat-container {
-        padding-bottom: 90px; /* Increased to ensure input area visibility */
-      }
     }
 
     @media (max-width: 400px) {
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1100;
+      }
+      .chat-container {
+        padding-top: 140px; /* Adjusted for smaller header height */
+        padding-bottom: 80px;
+      }
       .header-buttons button {
         font-size: 12px;
         padding: 5px;
@@ -269,14 +289,11 @@
         font-size: 12px;
       }
       .floating-mafia {
-        bottom: 120px; /* Adjusted for smaller screens */
+        bottom: 120px;
       }
       .input-area {
         padding: 6px;
-        bottom: 36px; /* Fine-tuned for smaller screens */
-      }
-      .chat-container {
-        padding-bottom: 80px; /* Adjusted for smaller screens */
+        bottom: 36px;
       }
     }
   </style>
