@@ -3,124 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mafia Chatroom</title>
+  <title>Mafia Chat</title>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #ffe6f0;
-      color: #333;
-    }
-
-    header {
-      background: linear-gradient(to right, #ff66b2, #ff3399);
+      padding: 0;
+      background: #000;
+      font-family: sans-serif;
       color: white;
-      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .header {
       text-align: center;
-      position: relative;
+      padding: 10px 0;
+      background-color: #111;
     }
 
-    header img {
-      width: 50px;
-      vertical-align: middle;
+    .header img {
+      width: 80px;
+      height: auto;
     }
 
-    header h1 {
-      display: inline;
-      font-size: 28px;
-      margin-left: 10px;
-      vertical-align: middle;
+    .top-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0;
     }
 
-    .eagle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 60px;
+    .top-buttons a {
+      background: #222;
+      color: gold;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+      border: 1px solid gold;
     }
 
-    .tab-row {
+    .main-logo {
+      width: 160px;
+      display: block;
+      margin: 15px auto 5px;
+      filter: drop-shadow(0 0 8px gold);
+    }
+
+    .nav-tabs {
       display: flex;
       justify-content: space-around;
-      background-color: #ffcce0;
       padding: 10px 0;
-      flex-wrap: wrap;
+      background: #111;
+      border-top: 1px solid #333;
+      border-bottom: 1px solid #333;
     }
 
-    .tab-button {
+    .nav-tabs span {
       flex: 1;
       text-align: center;
-      padding: 10px;
-      background-color: #ff99cc;
-      margin: 5px;
-      border-radius: 25px;
-      font-weight: bold;
       color: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      padding: 8px 0;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    .tab-button:hover {
-      background-color: #ff66b2;
-    }
-
-    .link-box {
-      background: white;
-      margin: 10px auto;
-      padding: 15px;
-      border-radius: 20px;
-      max-width: 95%;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-      text-align: center;
+    .bubble {
+      position: fixed;
+      bottom: 90px;
+      right: 15px;
+      background: gold;
+      color: #000;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 12px;
       font-weight: bold;
-      font-size: 16px;
-      color: #e60073;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px gold;
     }
 
-    .link-box a {
-      color: #e60073;
-      text-decoration: underline;
-      font-size: 14px;
+    .footer-tabs {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 1px solid #333;
     }
 
-    @media screen and (max-width: 600px) {
-      header h1 {
-        font-size: 22px;
+    .footer-tabs span {
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .header img {
+        width: 60px;
       }
 
-      .tab-button {
-        font-size: 14px;
-        padding: 8px;
+      .main-logo {
+        width: 120px;
       }
 
-      .eagle {
-        width: 40px;
+      .top-buttons a {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      .bubble {
+        width: 50px;
+        height: 50px;
+        font-size: 10px;
+      }
+
+      .footer-tabs span,
+      .nav-tabs span {
+        font-size: 11px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968776.png" alt="Mafia Chat Logo" />
-    <h1>MafiaChat</h1>
-    <img class="eagle" src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Eagle" />
-  </header>
-
-  <!-- Main Tabs -->
-  <div class="tab-row">
-    <div class="tab-button">Chat</div>
-    <div class="tab-button">Status</div>
-    <div class="tab-button">Groups</div>
-    <div class="tab-button">Call</div>
+  <div class="header">
+    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968841.png" alt="Mafia Chat Logo" />
   </div>
 
-  <!-- Mafia Resell Links -->
-  <div class="link-box">Earn with Mafia Resell</div>
-  <div class="link-box">Shopping from Mafia</div>
-  <div class="link-box">Bulk Purchase from Mafia</div>
-  <div class="link-box">
-    <a href="https://www.mafiaresell.com" target="_blank">https://www.mafiaresell.com</a>
+  <div class="top-buttons">
+    <a href="https://www.mafiaresell.com" target="_blank">Earn with Mafia Resell</a>
+    <a href="https://www.mafiaresell.com" target="_blank">Shopping from Mafia</a>
+    <a href="https://www.mafiaresell.com" target="_blank">Bulk Purchase from Mafia</a>
+  </div>
+
+  <img class="main-logo" src="https://i.ibb.co/jH8LgZm/eagle-golden-3d.png" alt="Eagle Logo" />
+
+  <div class="nav-tabs">
+    <span>Chat</span>
+    <span>Status</span>
+    <span>Groups</span>
+    <span>Calls</span>
+  </div>
+
+  <div class="bubble">Mafia</div>
+
+  <div class="footer-tabs">
+    <span>All</span>
+    <span>Family</span>
+    <span>Friends</span>
+    <span>Business</span>
   </div>
 
 </body>
