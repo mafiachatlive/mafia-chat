@@ -136,6 +136,7 @@
       display: flex;
       padding: 10px;
       background: #111;
+      margin-bottom: -12px; /* Move input area 12px (half inch) higher */
     }
 
     .input-area input {
@@ -159,7 +160,7 @@
 
     .floating-mafia {
       position: fixed;
-      bottom: 100px; /* Adjusted to avoid overlap with footer */
+      bottom: 100px;
       right: 20px;
       width: 56px;
       height: 56px;
@@ -183,7 +184,7 @@
       padding: 10px 0;
       border-top: 1px solid #333;
       position: relative;
-      z-index: 1000; /* Ensure footer is above other elements */
+      z-index: 1000;
     }
 
     .bottom-tabs button {
@@ -223,8 +224,11 @@
       .input-area input {
         font-size: 14px;
       }
+      .input-area {
+        margin-bottom: -12px; /* Move input area 12px higher on mobile */
+      }
       .floating-mafia {
-        bottom: 90px; /* Adjusted for mobile */
+        bottom: 90px;
         width: 48px;
         height: 48px;
         font-size: 12px;
@@ -232,7 +236,7 @@
       }
       .bottom-tabs {
         padding: 8px 0;
-        position: fixed; /* Fix footer to bottom */
+        position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
@@ -240,7 +244,7 @@
         z-index: 1000;
       }
       .chat-container {
-        padding-bottom: 60px; /* Add padding to prevent content overlap with footer */
+        padding-bottom: 60px;
       }
     }
 
@@ -257,7 +261,10 @@
         font-size: 12px;
       }
       .floating-mafia {
-        bottom: 80px; /* Further adjusted for smaller screens */
+        bottom: 80px;
+      }
+      .input-area {
+        margin-bottom: -12px; /* Consistent adjustment for smaller screens */
       }
     }
   </style>
