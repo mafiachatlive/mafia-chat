@@ -1,67 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Mafia Chat – Real-Time</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="module" src="./supabase.js"></script>
-    <script type="module" src="./chat.js"></script>
-    <style>
-      body {
-        font-family: sans-serif;
-        background: #111;
-        color: #fff;
-        padding: 10px;
-      }
-      #chat-box {
-        border: 1px solid #555;
-        padding: 10px;
-        height: 400px;
-        overflow-y: scroll;
-        margin-bottom: 10px;
-        background: #000;
-      }
-      input, button {
-        padding: 8px;
-        font-size: 16px;
-      }
-    </style>
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Mafia Chat – Join the Underworld</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
     <h1>💬 Mafia Chat</h1>
-    <div id="chat-box"></div>
-    <input type="text" id="messageInput" placeholder="Type your message..." />
-    <button onclick="sendMessage()">Send</button>
-
-    <script type="module">
-      import { supabase } from './supabase.js'
-
-      const chatBox = document.getElementById('chat-box');
-      const input = document.getElementById('messageInput');
-
-      async function sendMessage() {
-        const text = input.value.trim();
-        if (!text) return;
-        await supabase.from('messages').insert([{ content: text }]);
-        input.value = '';
-      }
-
-      async function loadMessages() {
-        const { data, error } = await supabase.from('messages').select('*').order('created_at', { ascending: true });
-        if (data) {
-          chatBox.innerHTML = data.map(msg => `<div>${msg.content}</div>`).join('');
-          chatBox.scrollTop = chatBox.scrollHeight;
-        }
-      }
-
-      supabase
-        .channel('chat-room')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
-          loadMessages();
-        })
-        .subscribe();
-
-      loadMessages();
-    </script>
-  </body>
+    <p>Login with Phone Number to Enter the Mafia Network</p>
+    <a href="/login.html" class="btn">🚪 Enter Chat</a>
+  </div>
+</body>
 </html>
