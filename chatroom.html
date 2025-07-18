@@ -136,7 +136,7 @@
       display: flex;
       padding: 10px;
       background: #111;
-      margin-bottom: -12px; /* Move input area 12px (half inch) higher */
+      z-index: 900; /* Ensure input area is below footer but above content */
     }
 
     .input-area input {
@@ -160,7 +160,7 @@
 
     .floating-mafia {
       position: fixed;
-      bottom: 100px;
+      bottom: 120px; /* Adjusted to avoid overlap with input and footer */
       right: 20px;
       width: 56px;
       height: 56px;
@@ -225,10 +225,11 @@
         font-size: 14px;
       }
       .input-area {
-        margin-bottom: -12px; /* Move input area 12px higher on mobile */
+        padding: 8px;
+        position: relative; /* Ensure input stays above content */
       }
       .floating-mafia {
-        bottom: 90px;
+        bottom: 110px; /* Adjusted for mobile */
         width: 48px;
         height: 48px;
         font-size: 12px;
@@ -244,7 +245,7 @@
         z-index: 1000;
       }
       .chat-container {
-        padding-bottom: 60px;
+        padding-bottom: 80px; /* Increased to ensure input area is visible */
       }
     }
 
@@ -261,10 +262,13 @@
         font-size: 12px;
       }
       .floating-mafia {
-        bottom: 80px;
+        bottom: 100px; /* Adjusted for smaller screens */
       }
       .input-area {
-        margin-bottom: -12px; /* Consistent adjustment for smaller screens */
+        padding: 6px;
+      }
+      .chat-container {
+        padding-bottom: 70px; /* Adjusted for smaller screens */
       }
     }
   </style>
