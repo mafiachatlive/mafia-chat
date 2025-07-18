@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mafia Video Chat</title>
+  <style>
+    body { background: #000; color: white; text-align: center; }
+    video { width: 45%; margin: 10px; border: 2px solid pink; border-radius: 20px; }
+    #buttons { margin-top: 20px; }
+    button { padding: 10px 20px; background: hotpink; border: none; border-radius: 10px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>🎥 Mafia Video Call</h1>
+
+  <video id="localVideo" autoplay muted></video>
+  <video id="remoteVideo" autoplay></video>
+
+  <div id="buttons">
+    <button onclick="startCall()">📞 Start Call</button>
+  </div>
+
+  <!-- Connect to signaling server -->
+  <script src="https://mafiachat-signal.repl.co/socket.io/socket.io.js"></script>
+  <script src="video.js"></script>
+</body>
+</html>
