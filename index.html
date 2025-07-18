@@ -1,85 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mafia Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mafia Chat Dashboard</title>
   <style>
     body {
+      background-color: #0a0a0a;
+      color: white;
+      font-family: Arial, sans-serif;
       margin: 0;
-      background: #111;
-      font-family: 'Segoe UI', sans-serif;
-      color: #fff;
+      padding: 0;
     }
+
     h1 {
       text-align: center;
       padding: 20px;
-      font-size: 32px;
-      color: #f0f0f0;
+      color: #ff007f;
     }
-    .dashboard {
+
+    .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       gap: 20px;
       padding: 20px;
     }
-    .card {
-      background: #1f1f1f;
-      border-radius: 16px;
-      padding: 20px;
+
+    .grid-item {
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      padding: 10px;
       text-align: center;
-      transition: 0.3s;
+      transition: transform 0.2s;
       cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
     }
-    .card:hover {
-      background: #333;
+
+    .grid-item:hover {
       transform: scale(1.05);
     }
-    .card img {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 10px;
+
+    .grid-item img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 8px;
     }
-    .card span {
-      display: block;
+
+    .grid-item span {
       font-size: 14px;
+      color: #ffffff;
+    }
+
+    a {
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-
-  <h1>💀 Mafia Dashboard</h1>
-
-  <div class="dashboard">
-    <a href="chat-file.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/1384/1384005.png" />
-      <span>Chat File</span>
-    </a>
-    <a href="chat-media.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/126/126477.png" />
-      <span>Chat Media</span>
-    </a>
-    <a href="chat-text.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/876/876019.png" />
-      <span>Chat Text</span>
-    </a>
-    <a href="chat-voice.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/727/727240.png" />
-      <span>Chat Voice</span>
-    </a>
-    <!-- ADD MORE ITEMS SAME WAY -->
-    <a href="status.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/709/709496.png" />
-      <span>Status</span>
-    </a>
-    <a href="location.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" />
-      <span>Location</span>
-    </a>
-    <a href="emoji-picker.html" class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/742/742751.png" />
-      <span>Emoji Picker</span>
-    </a>
+  <h1>💬 Mafia Chat Dashboard</h1>
+  <div class="grid-container">
+    <!-- Grid items: each links to a page -->
+    <a href="chatfile.html" class="grid-item"><img src="icons/chatfile.png"><span>Chat File</span></a>
+    <a href="chatmedia.html" class="grid-item"><img src="icons/chatmedia.png"><span>Chat Media</span></a>
+    <a href="chattext.html" class="grid-item"><img src="icons/chattext.png"><span>Chat Text</span></a>
+    <a href="chatvoice.html" class="grid-item"><img src="icons/chatvoice.png"><span>Chat Voice</span></a>
+    <a href="chatvoiceview.html" class="grid-item"><img src="icons/chatvoiceview.png"><span>Chat Voice View</span></a>
+    <a href="chatroom.html" class="grid-item"><img src="icons/chatroom.png"><span>Chat Room</span></a>
+    <a href="contactgalleries.html" class="grid-item"><img src="icons/contactgalleries.png"><span>Contact Galleries</span></a>
+    <a href="contacts.html" class="grid-item"><img src="icons/contacts.png"><span>Contacts</span></a>
+    <a href="emojipicker.html" class="grid-item"><img src="icons/emojipicker.png"><span>Emoji Picker</span></a>
+    <a href="emoji.html" class="grid-item"><img src="icons/emoji.png"><span>Emoji</span></a>
+    <a href="galleryfiles.html" class="grid-item"><img src="icons/galleryfiles.png"><span>Gallery Files</span></a>
+    <a href="galleryimages.html" class="grid-item"><img src="icons/galleryimages.png"><span>Gallery Images</span></a>
+    <a href="gallerynotes.html" class="grid-item"><img src="icons/gallerynotes.png"><span>Gallery Notes</span></a>
+    <a href="galleryvideos.html" class="grid-item"><img src="icons/galleryvideos.png"><span>Gallery Videos</span></a>
+    <a href="groupaudiocall.html" class="grid-item"><img src="icons/groupaudiocall.png"><span>Group Audio Call</span></a>
+    <a href="groupbanlist.html" class="grid-item"><img src="icons/groupbanlist.png"><span>Group Ban List</span></a>
+    <a href="groupcall.html" class="grid-item"><img src="icons/groupcall.png"><span>Group Call</span></a>
+    <a href="groupchat.html" class="grid-item"><img src="icons/groupchat.png"><span>Group Chat</span></a>
+    <a href="groupcreate.html" class="grid-item"><img src="icons/groupcreate.png"><span>Group Create</span></a>
+    <a href="groupfile.html" class="grid-item"><img src="icons/groupfile.png"><span>Group File</span></a>
+    <a href="groupinvite.html" class="grid-item"><img src="icons/groupinvite.png"><span>Group Invite</span></a>
+    <a href="groupmedia.html" class="grid-item"><img src="icons/groupmedia.png"><span>Group Media</span></a>
+    <a href="groupmembers.html" class="grid-item"><img src="icons/groupmembers.png"><span>Group Members</span></a>
+    <a href="grouppin.html" class="grid-item"><img src="icons/grouppin.png"><span>Group Pin</span></a>
+    <a href="groupprivacy.html" class="grid-item"><img src="icons/groupprivacy.png"><span>Group Privacy</span></a>
+    <a href="grouprequests.html" class="grid-item"><img src="icons/grouprequests.png"><span>Group Requests</span></a>
+    <a href="groupsettings.html" class="grid-item"><img src="icons/groupsettings.png"><span>Group Settings</span></a>
+    <a href="groupstatusupload.html" class="grid-item"><img src="icons/groupstatusupload.png"><span>Group Status Upload</span></a>
+    <a href="groupstatusview.html" class="grid-item"><img src="icons/groupstatusview.png"><span>Group Status View</span></a>
+    <a href="groupvoiceview.html" class="grid-item"><img src="icons/groupvoiceview.png"><span>Group Voice View</span></a>
+    <a href="groupvoice.html" class="grid-item"><img src="icons/groupvoice.png"><span>Group Voice</span></a>
+    <a href="location.html" class="grid-item"><img src="icons/location.png"><span>Location</span></a>
+    <a href="mafiagallerydashboard.html" class="grid-item"><img src="icons/mafiagallerydashboard.png"><span>Mafia Gallery</span></a>
+    <a href="statusview.html" class="grid-item"><img src="icons/statusview.png"><span>Status View</span></a>
+    <a href="status.html" class="grid-item"><img src="icons/status.png"><span>Status</span></a>
+    <a href="videochat.html" class="grid-item"><img src="icons/videochat.png"><span>Video Chat</span></a>
   </div>
-
 </body>
 </html>
