@@ -8,16 +8,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    body {
+    html, body {
       font-family: 'Roboto', sans-serif;
-      background: #f4f4f4;
+      background: #ffe6f0; /* Mafia Pink */
       margin: 0;
       padding: 0;
+      height: 100%;
+      overflow: hidden;
     }
 
     header {
-      background: #0d47a1;
-      color: white;
+      background: #ff1493; /* Mafia Pink */
+      color: gold;
       padding: 15px 20px;
       display: flex;
       align-items: center;
@@ -25,31 +27,31 @@
       font-weight: bold;
     }
 
-    header .eagle {
-      width: 30px;
-      height: 30px;
-      margin: 0 5px;
-    }
-
     nav {
       display: flex;
       justify-content: space-around;
-      background: white;
+      background: #ffc0cb; /* Light Pink */
       padding: 10px 0;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 2px solid gold;
     }
 
     nav button {
       background: none;
       border: none;
       font-size: 16px;
-      color: #333;
+      color: black;
       cursor: pointer;
     }
 
+    nav button i {
+      color: gold;
+    }
+
     .section {
-      padding: 20px;
+      padding: 10px;
       display: none;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
     }
 
     .active {
@@ -67,41 +69,84 @@
     .contact-chip {
       display: inline-block;
       padding: 8px 12px;
-      background: #e3f2fd;
+      background: #ffe4e1;
       border-radius: 20px;
       margin: 5px;
-    }
-
-    .call-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .call-buttons button {
-      flex: 1;
-      padding: 10px;
-      background: #dce775;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      font-weight: bold;
     }
 
     .contact-actions {
       margin-top: 10px;
     }
 
+    .contact-actions input {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .contact-actions button {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
     .top-btns {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
+      margin-top: 10px;
     }
 
     .top-btns button {
-      background: #eeeeee;
-      border: 1px solid #bbb;
+      background: #ffc0cb;
+      border: 2px solid gold;
+      color: black;
       border-radius: 8px;
       padding: 8px 12px;
+      font-weight: bold;
       cursor: pointer;
+    }
+
+    /* Mafia Box inside CALLS section */
+    .mafia-box {
+      background: linear-gradient(to right, #ffc0cb, gold);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .mafia-box h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: black;
+      background: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    /* Mobile */
+    @media only screen and (max-width: 600px) {
+      .section {
+        padding: 10px;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+      }
+
+      header {
+        font-size: 20px;
+        justify-content: center;
+      }
+
+      nav button {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -109,7 +154,7 @@
 
   <!-- 🔷 Header -->
   <header>
-    Mafia<span style="color:gold;">🦅</span>Chat
+    Mafia<span style="margin: 0 5px;">🦅</span>Chat
   </header>
 
   <!-- 🔳 Navigation -->
@@ -120,33 +165,12 @@
     <button onclick="showSection('calls')"><i class="bi bi-telephone"></i> Calls</button>
   </nav>
 
-  <!-- 🔹 Sections -->
+  <!-- 🔹 Chats Section (Mafia Eagle Box REMOVED) -->
   <div id="chats" class="section active">
-    <div class="card">
-      <h3>📱 Mafia Eagle Box</h3>
-      <p>Your branded identity will show here.</p>
-    </div>
-
-    <div class="card">
-      <h4>📇 Contacts</h4>
-      <input type="text" placeholder="Search Contacts" />
-      <div class="contact-chip">Majid</div>
-      <div class="contact-chip">Sehar</div>
-      <div class="contact-chip">Tech Praa</div>
-      <div class="contact-actions">
-        <input type="text" placeholder="Add New Contact" />
-        <button>➕ Save Contact</button>
-      </div>
-    </div>
-
-    <div class="top-btns">
-      <button>Blocked Contacts</button>
-      <button>Family Contacts</button>
-      <button>Business Contacts</button>
-      <button>Contact to Mafia</button>
-    </div>
+    <!-- You can leave this empty or show last messages here -->
   </div>
 
+  <!-- 🔹 Status Section -->
   <div id="status" class="section">
     <div class="card">
       <h3>📺 Status</h3>
@@ -154,6 +178,7 @@
     </div>
   </div>
 
+  <!-- 🔹 Groups Section -->
   <div id="groups" class="section">
     <div class="card">
       <h3>👥 Groups</h3>
@@ -161,6 +186,7 @@
     </div>
   </div>
 
+  <!-- 🔹 Calls Section with Embedded Contact Box -->
   <div id="calls" class="section">
     <div class="card">
       <h3>📞 Call Options</h3>
@@ -170,15 +196,25 @@
       </div>
     </div>
 
-    <div class="card">
-      <h4>🔍 Search Contacts to Call</h4>
-      <input type="text" placeholder="Search name or number" />
-    </div>
-
-    <div class="card">
-      <h4>🕓 Call History</h4>
-      <p>Majid — Audio — 2 mins ago</p>
-      <p>Sehar — Video — Yesterday</p>
+    <div class="mafia-box">
+      <h2>Mafia</h2>
+      <div class="card" style="margin-top: 15px;">
+        <h4>📇 Contacts</h4>
+        <input type="text" placeholder="Search Contacts" />
+        <div class="contact-chip">Majid</div>
+        <div class="contact-chip">Sehar</div>
+        <div class="contact-chip">Tech Praa</div>
+        <div class="contact-actions">
+          <input type="text" placeholder="Add New Contact" />
+          <button>➕ Save Contact</button>
+        </div>
+        <div class="top-btns">
+          <button>Blocked</button>
+          <button>Family</button>
+          <button>Business</button>
+          <button>Contact Mafia</button>
+        </div>
+      </div>
     </div>
   </div>
 
