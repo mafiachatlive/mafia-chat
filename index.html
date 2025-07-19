@@ -1,37 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Mafia Chat Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mafia Chat - WhatsApp Style SPA</title>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      background: #f0f0f0;
+    /* Basic Reset */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
     }
-    .btn {
-      display: block;
-      margin: 10px 0;
-      padding: 15px;
-      background: #25D366;
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
       color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    /* Pages container */
+    .page {
+      display: none;
+      flex: 1 1 auto;
+      padding: 20px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .page.active {
+      display: block;
+    }
+    /* Bottom Navigation */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      background: #1a1a1a;
+      border-top: 1px solid #333;
+      padding: 8px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .bottom-nav button {
+      background: none;
       border: none;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 18px;
-      text-decoration: none;
+      color: #bbb;
+      font-size: 12px;
+      cursor: pointer;
+      flex: 1;
+      padding: 6px 0;
+      transition: color 0.3s;
+    }
+    .bottom-nav button.active {
+      color: gold;
+      font-weight: bold;
+      text-shadow: 0 0 5px gold;
+    }
+    .bottom-nav button:hover {
+      color: gold;
+    }
+    /* Scrollbar for pages */
+    .page::-webkit-scrollbar {
+      width: 6px;
+    }
+    .page::-webkit-scrollbar-thumb {
+      background: gold;
+      border-radius: 3px;
     }
   </style>
 </head>
 <body>
 
-  <h2>📱 Mafia Chat Interface</h2>
+  <!-- Pages -->
+  <div id="chat-file" class="page">Chat File Page Loaded</div>
+  <div id="chat-media" class="page">Chat Media Page Loaded</div>
+  <div id="chat-text" class="page">Chat Text Page Loaded</div>
+  <div id="chat-voice" class="page">Chat Voice Page Loaded</div>
+  <div id="chat-voice-view" class="page">Chat Voice View Page Loaded</div>
+  <div id="chat-room" class="page active">Chat Room Page Loaded (Default Front Page)</div>
+  <div id="contact-galleries" class="page">Contact Galleries Page Loaded</div>
+  <div id="contacts" class="page">Contacts Page Loaded</div>
+  <div id="emoji-picker" class="page">Emoji Picker Page Loaded</div>
+  <div id="emoji" class="page">Emoji Page Loaded</div>
+  <div id="gallery-files" class="page">Gallery Files Page Loaded</div>
+  <div id="gallery-images" class="page">Gallery Images Page Loaded</div>
+  <div id="gallery-notes" class="page">Gallery Notes Page Loaded</div>
+  <div id="gallery-videos" class="page">Gallery Videos Page Loaded</div>
+  <div id="group-audio-call" class="page">Group Audio Call Page Loaded</div>
+  <div id="group-ban-list" class="page">Group Ban List Page Loaded</div>
+  <div id="group-call" class="page">Group Call Page Loaded</div>
+  <div id="group-chat" class="page">Group Chat Page Loaded</div>
+  <div id="group-create" class="page">Group Create Page Loaded</div>
+  <div id="group-file" class="page">Group File Page Loaded</div>
+  <div id="group-invite" class="page">Group Invite Page Loaded</div>
+  <div id="group-media" class="page">Group Media Page Loaded</div>
+  <div id="group-members" class="page">Group Members Page Loaded</div>
+  <div id="group-pin" class="page">Group Pin Page Loaded</div>
+  <div id="group-privacy" class="page">Group Privacy Page Loaded</div>
+  <div id="group-requests" class="page">Group Requests Page Loaded</div>
+  <div id="group-settings" class="page">Group Settings Page Loaded</div>
+  <div id="group-status-upload" class="page">Group Status Upload Page Loaded</div>
+  <div id="group-status-view" class="page">Group Status View Page Loaded</div>
+  <div id="group-voice-view" class="page">Group Voice View Page Loaded</div>
+  <div id="group-voice" class="page">Group Voice Page Loaded</div>
+  <div id="location" class="page">Location Page Loaded</div>
+  <div id="mafia-gallery-dashboard" class="page">Mafia Gallery Dashboard Page Loaded</div>
+  <div id="status-view" class="page">Status View Page Loaded</div>
+  <div id="status" class="page">Status Page Loaded</div>
+  <div id="video-chat" class="page">Video Chat Page Loaded</div>
 
-  <a class="btn" href="chat-room.html">💬 Chat Room</a>
-  <a class="btn" href="chat-file.html">📁 Chat File</a>
-  <a class="btn" href="chat-media.html">🖼️ Chat Media</a>
-  <a class="btn" href="status.html">📷 Status</a>
-  <a class="btn" href="gallery-dashboard.html">🗂 Mafia Gallery</a>
-  <a class="btn" href="group-chat.html">👥 Group Chat</a>
+  <!-- Bottom Nav Buttons -->
+  <div class="bottom-nav">
+    <button data-target="chat-file">Chat File</button>
+    <button data-target="chat-media">Chat Media</button>
+    <button data-target="chat-text">Chat Text</button>
+    <button data-target="chat-voice">Chat Voice</button>
+    <button data-target="chat-voice-view">Chat Voice View</button>
+    <button data-target="chat-room" class="active">Chat Room</button>
+    <button data-target="contact-galleries">Contact Galleries</button>
+    <button data-target="contacts">Contacts</button>
+    <button data-target="emoji-picker">Emoji Picker</button>
+    <button data-target="emoji">Emoji</button>
+    <button data-target="gallery-files">Gallery Files</button>
+    <button data-target="gallery-images">Gallery Images</button>
+    <button data-target="gallery-notes">Gallery Notes</button>
+    <button data-target="gallery-videos">Gallery Videos</button>
+    <button data-target="group-audio-call">Group Audio Call</button>
+    <button data-target="group-ban-list">Group Ban List</button>
+    <button data-target="group-call">Group Call</button>
+    <button data-target="group-chat">Group Chat</button>
+    <button data-target="group-create">Group Create</button>
+    <button data-target="group-file">Group File</button>
+    <button data-target="group-invite">Group Invite</button>
+    <button data-target="group-media">Group Media</button>
+    <button data-target="group-members">Group Members</button>
+    <button data-target="group-pin">Group Pin</button>
+    <button data-target="group-privacy">Group Privacy</button>
+    <button data-target="group-requests">Group Requests</button>
+    <button data-target="group-settings">Group Settings</button>
+    <button data-target="group-status-upload">Group Status Upload</button>
+    <button data-target="group-status-view">Group Status View</button>
+    <button data-target="group-voice-view">Group Voice View</button>
+    <button data-target="group-voice">Group Voice</button>
+    <button data-target="location">Location</button>
+    <button data-target="mafia-gallery-dashboard">Mafia Gallery Dashboard</button>
+    <button data-target="status-view">Status View</button>
+    <button data-target="status">Status</button>
+    <button data-target="video-chat">Video Chat</button>
+  </div>
 
+  <script>
+    const buttons = document.querySelectorAll('.bottom-nav button');
+    const pages = document.querySelectorAll('.page');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        buttons.forEach(b => b.classList.remove('active'));
+        // Add active to clicked button
+        btn.classList.add('active');
+
+        // Hide all pages
+        pages.forEach(p => p.classList.remove('active'));
+
+        // Show target page
+        const targetId = btn.getAttribute('data-target');
+        const targetPage = document.getElementById(targetId);
+        if(targetPage) targetPage.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
