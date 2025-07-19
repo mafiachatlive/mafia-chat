@@ -1,96 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mafia Chat</title>
+  <title>Mafia Chat Dashboard</title>
   <style>
     body {
       font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f1f1f1;
+      padding: 20px;
+      background: #f0f0f0;
     }
-    nav {
-      display: flex;
-      overflow-x: auto;
-      background: #075e54;
-      padding: 10px;
-    }
-    nav button {
-      background: #25d366;
+    .btn {
+      display: block;
+      margin: 10px 0;
+      padding: 15px;
+      background: #25D366;
       color: white;
       border: none;
-      margin-right: 8px;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    iframe {
-      width: 100%;
-      height: calc(100vh - 60px);
-      border: none;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
-  <nav id="navbar">
-    <!-- Buttons auto-generated -->
-  </nav>
+  <h2>📱 Mafia Chat Interface</h2>
 
-  <iframe id="chatFrame" src="chat-room.html"></iframe>
-
-  <script>
-    const files = [
-      "chat-file.html",
-      "chat-media.html",
-      "chat-text.html",
-      "chat-voice.html",
-      "chat-voice-view.html",
-      "chat-room.html",
-      "contact-galleries.html",
-      "contacts.html",
-      "emoji-picker.html",
-      "emoji.html",
-      "gallery-files.html",
-      "gallery-images.html",
-      "gallery-notes.html",
-      "gallery-videos.html",
-      "group-audio-call.html",
-      "group-ban-list.html",
-      "group-call.html",
-      "group-chat.html",
-      "group-create.html",
-      "group-file.html",
-      "group-invite.html",
-      "group-media.html",
-      "group-members.html",
-      "group-pin.html",
-      "group-privacy.html",
-      "group-requests.html",
-      "group-settings.html",
-      "group-status-upload.html",
-      "group-status-view.html",
-      "group-voice-view.html",
-      "group-voice.html",
-      "location.html",
-      "mafia-gallery-dashboard.html",
-      "status-view.html",
-      "status.html",
-      "video-chat.html"
-    ];
-
-    const navbar = document.getElementById('navbar');
-    const chatFrame = document.getElementById('chatFrame');
-
-    files.forEach(file => {
-      const btn = document.createElement('button');
-      btn.textContent = file.replace('.html', '').replaceAll('-', ' ');
-      btn.onclick = () => chatFrame.src = file;
-      navbar.appendChild(btn);
-    });
-  </script>
+  <a class="btn" href="chat-room.html">💬 Chat Room</a>
+  <a class="btn" href="chat-file.html">📁 Chat File</a>
+  <a class="btn" href="chat-media.html">🖼️ Chat Media</a>
+  <a class="btn" href="status.html">📷 Status</a>
+  <a class="btn" href="gallery-dashboard.html">🗂 Mafia Gallery</a>
+  <a class="btn" href="group-chat.html">👥 Group Chat</a>
 
 </body>
 </html>
