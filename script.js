@@ -1,46 +1,125 @@
 import { supabase } from './supabase.js';
+import { auth, signInWithPhoneNumber, signInWithEmailLink, RecaptchaVerifier } from './firebase.js';
 
 // DOM elements
 const messagesDiv = document.getElementById('messages');
 const chatsButton = document.querySelector('.header-buttons button:nth-child(1)');
-const otherButtons = document.querySelectorAll('.header-buttons button:not(:nth-child(1))');
+const otherButtons = document.querySelectorAll('.header-buttons-cells button:not(:nth-child(1))');
 const floatingMafia = document.querySelector('.floating-mafia');
 const contactSearchModal = document.getElementById('contactSearchModal');
 const contactSearchInput = document.getElementById('contactSearchInput');
 const contactResults = document.getElementById('contactResults');
 const loginModal = document.getElementById('loginModal');
+const loginInput = document.getElementById('loginInput');
+const otpInput = document.getElementById('otpInput');
+const verifyOtpButton = document.getElementById('verifyOtpButton');
 const messageInput = document.getElementById('messageInput');
 
 let chats = [];
 let currentChat = null;
+let recaptchaVerifier;
+let confirmationResult;
 
-// Check if user is logged in
+// Initialize Firebase Authentication
 async function init() {
-  const { data: { user } } = await supabase.auth.getUser();
+  // Initialize reCAPTCHA verifier
+  recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+    'size': 'normal',
+    'callback': () => {
+      console.log('reCAPTCHA verified');
+    }
+  }, auth);
+  recaptchaVerifier.render();
+
+  const user = auth.currentUser;
   if (!user) {
     loginModal.style.display = 'flex';
   } else {
+    await syncFirebaseUserWithSupabase(user);
     showChatList();
   }
 }
 
-// Login function
-async function login() {
-  const email = document.getElementById('emailInput').value;
-  const password = document.getElementById('passwordInput').value;
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    console.error('Login error:', error.message);
-    alert('Login failed: ' + error.message);
+// Sync Firebase user with Supabase users table
+async function syncFirebaseUserWithSupabase(firebaseUser) {
+  const { data, error } = await supabase
+    .from('users')
+    .select('id')
+    .eq('id', firebaseUser.uid)
+    .single();
+  if (error && error.code === 'PGRST116') {
+    // User not in Supabase, insert them
+    await supabase
+      .from('users')
+      .insert({
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName || 'User',
+        email: firebaseUser.email || '',
+        phone: firebaseUser.phoneNumber || ''
+      });
+  }
+}
+
+// Send OTP
+async function sendOTP() {
+  const input = loginInput.value.trim();
+  if (!input) {
+    alert('Please enter an email or phone number');
     return;
   }
-  loginModal.style.display = 'none';
-  showChatList();
+
+  try {
+    if (input.includes('@')) {
+      // Email OTP (using email link)
+      await signInWithEmailLink(auth, input, {
+        url: window.location.href,
+        handleCodeInApp: true
+      });
+      alert('Sign-in link sent to your email. Check your inbox.');
+      otpInput.style.display = 'block';
+      verifyOtpButton.style.display = 'block';
+    } else {
+      // Phone OTP
+      confirmationResult = await signInWithPhoneNumber(auth, input, recaptchaVerifier);
+      alert('OTP sent to your phone.');
+      otpInput.style.display = 'block';
+      verifyOtpButton.style.display = 'block';
+    }
+  } catch (error) {
+    console.error('Error sending OTP:', error.message);
+    alert('Error sending OTP: ' + error.message);
+  }
+}
+
+// Verify OTP
+async function verifyOTP() {
+  const otp = otpInput.value.trim();
+  if (!otp) {
+    alert('Please enter the OTP');
+    return;
+  }
+
+  try {
+    let userCredential;
+    if (loginInput.value.includes('@')) {
+      alert('Email link verification should be handled via the link sent to your email.');
+    } else {
+      // Phone OTP
+      userCredential = await confirmationResult.confirm(otp);
+    }
+    const user = userCredential.user;
+    await syncFirebaseUserWithSupabase(user);
+    loginModal.style.display = 'none';
+    showChatList();
+  } catch (error) {
+    console.error('Error verifying OTP:', error.message);
+    alert('Error verifying OTP: ' + error.message);
+  }
 }
 
 // Fetch chats from Supabase
 async function fetchChats() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = auth.currentUser;
   if (!user) {
     console.error('No user logged in');
     return [];
@@ -53,7 +132,7 @@ async function fetchChats() {
       last_message_time,
       users!chats_contact_id_fkey (name)
     `)
-    .or(`user_id.eq.${user.id},contact_id.eq.${user.id}`);
+    .or(`user_id.eq.${user.uid},contact_id.eq.${user.uid}`);
   if (error) {
     console.error('Error fetching chats:', error.message);
     return [];
@@ -63,7 +142,7 @@ async function fetchChats() {
     contact: chat.users.name,
     lastMessage: chat.last_message || 'No messages yet',
     time: chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString() : '',
-    messages: [],
+    messages: []
   }));
 }
 
@@ -81,7 +160,7 @@ async function fetchMessages(chatId) {
   return data.map(msg => ({
     text: msg.text,
     sent: msg.is_sent,
-    time: new Date(msg.sent_at).toLocaleTimeString(),
+    time: new Date(msg.sent_at).toLocaleTimeString()
   }));
 }
 
@@ -142,7 +221,7 @@ async function searchContacts(query) {
 
 // Start a new chat
 async function startNewChat(contact) {
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = auth.currentUser;
   if (!user) {
     console.error('No user logged in');
     return;
@@ -150,10 +229,10 @@ async function startNewChat(contact) {
   const { data, error } = await supabase
     .from('chats')
     .insert({
-      user_id: user.id,
+      user_id: user.uid,
       contact_id: contact.id,
       last_message: 'Chat started',
-      last_message_time: new Date().toISOString(),
+      last_message_time: new Date().toISOString()
     })
     .select()
     .single();
@@ -166,7 +245,7 @@ async function startNewChat(contact) {
     contact: contact.name,
     lastMessage: 'Chat started',
     time: new Date().toLocaleTimeString(),
-    messages: [{ text: `Started chat with ${contact.name}`, sent: true, time: new Date().toLocaleTimeString() }],
+    messages: [{ text: `Started chat with ${contact.name}`, sent: true, time: new Date().toLocaleTimeString() }]
   };
   chats.push(newChat);
   closeContactModal();
@@ -204,7 +283,7 @@ contactSearchInput.addEventListener('input', async (e) => {
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (text && currentChat) {
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = auth.currentUser;
     if (!user) {
       console.error('No user logged in');
       return;
@@ -213,10 +292,10 @@ async function sendMessage() {
       .from('messages')
       .insert({
         chat_id: currentChat.id,
-        sender_id: user.id,
+        sender_id: user.uid,
         text,
         sent_at: new Date().toISOString(),
-        is_sent: true,
+        is_sent: true
       });
     if (error) {
       console.error('Error sending message:', error.message);
@@ -226,7 +305,7 @@ async function sendMessage() {
       .from('chats')
       .update({
         last_message: text,
-        last_message_time: new Date().toISOString(),
+        last_message_time: new Date().toISOString()
       })
       .eq('id', currentChat.id);
     currentChat.messages.push({ text, sent: true, time: new Date().toLocaleTimeString() });
