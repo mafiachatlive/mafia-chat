@@ -1,91 +1,296 @@
-// DOM elements for Mafia button
+import { supabase } from './supabase.js';
+import { auth, signInWithPhoneNumber, signInWithEmailLink, RecaptchaVerifier } from './firebase.js';
+
+// DOM elements
+const messagesDiv = document.getElementById('messages');
+const chatsButton = document.querySelector('.header-buttons button:nth-child(1)');
+const otherButtons = document.querySelectorAll('.header-buttons button:not(:nth-child(1))');
 const floatingMafia = document.querySelector('.floating-mafia');
 const contactSearchModal = document.getElementById('contactSearchModal');
 const contactSearchInput = document.getElementById('contactSearchInput');
 const contactResults = document.getElementById('contactResults');
+const loginModal = document.getElementById('loginModal');
+const loginInput = document.getElementById('loginInput');
+const otpInput = document.getElementById('otpInput');
+const verifyOtpButton = document.getElementById('verifyOtpButton');
+const messageInput = document.getElementById('messageInput');
 
-// Debug: Check if elements are found
+let chats = [];
+let currentChat = null;
+let recaptchaVerifier;
+let confirmationResult;
+
+// Debug: Check if DOM elements exist
+console.log('Messages div:', messagesDiv ? 'Found' : 'Not found');
+console.log('Chats button:', chatsButton ? 'Found' : 'Not found');
 console.log('Floating Mafia button:', floatingMafia ? 'Found' : 'Not found');
 console.log('Contact search modal:', contactSearchModal ? 'Found' : 'Not found');
 console.log('Contact search input:', contactSearchInput ? 'Found' : 'Not found');
 console.log('Contact results:', contactResults ? 'Found' : 'Not found');
+console.log('Login modal:', loginModal ? 'Found' : 'Not found');
 
-// Open contact search modal
-floatingMafia?.addEventListener('click', () => {
-  console.log('Mafia button clicked at', new Date().toLocaleTimeString());
-  if (contactSearchModal) {
-    contactSearchModal.style.display = 'flex';
-    contactSearchInput?.focus();
-  } else {
-    console.error('Cannot open contact search modal: Element not found');
+// Initialize Firebase Authentication
+async function init() {
+  console.log('Initializing app...');
+  try {
+    // Initialize reCAPTCHA verifier
+    recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+      size: 'normal',
+      callback: () => console.log('reCAPTCHA verified')
+    }, auth);
+    recaptchaVerifier.render().then(() => console.log('reCAPTCHA rendered'));
+  } catch (error) {
+    console.error('Error initializing reCAPTCHA:', error.message);
+    alert('Failed to initialize login: ' + error.message);
   }
-});
 
-// Close contact search modal
-function closeContactModal() {
-  console.log('Closing contact search modal');
-  if (contactSearchModal) {
-    contactSearchModal.style.display = 'none';
-    if (contactSearchInput) contactSearchInput.value = '';
-    if (contactResults) contactResults.innerHTML = '';
+  const user = auth.currentUser;
+  if (!user) {
+    console.log('No user logged in, showing login modal');
+    if (loginModal) loginModal.style.display = 'flex';
   } else {
-    console.error('Cannot close contact search modal: Element not found');
+    console.log('User logged in:', user.uid);
+    await syncFirebaseUserWithSupabase(user);
+    showChatList();
   }
 }
 
-// Handle contact search input
-contactSearchInput?.addEventListener('input', async (e) => {
-  console.log('Contact search input:', e.target.value);
-  const query = e.target.value.trim().toLowerCase();
-  if (!query) {
-    contactResults.innerHTML = '';
+// Sync Firebase user with Supabase users table
+async function syncFirebaseUserWithSupabase(firebaseUser) {
+  console.log('Syncing Firebase user:', firebaseUser.uid);
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id')
+      .eq('id', firebaseUser.uid)
+      .single();
+    if (error && error.code === 'PGRST116') {
+      console.log('Inserting new user to Supabase');
+      await supabase
+        .from('users')
+        .insert({
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName || 'User',
+          email: firebaseUser.email || '',
+          phone: firebaseUser.phoneNumber || ''
+        });
+    } else if (error) {
+      console.error('Error checking user in Supabase:', error.message);
+      alert('Error syncing user: ' + error.message);
+    } else {
+      console.log('User already exists in Supabase:', data.id);
+    }
+  } catch (error) {
+    console.error('Error in syncFirebaseUserWithSupabase:', error.message);
+  }
+}
+
+// Send OTP
+async function sendOTP() {
+  const input = loginInput?.value.trim();
+  console.log('Send OTP requested for:', input);
+  if (!input) {
+    alert('Please enter an email or phone number');
     return;
   }
-  if (contactResults) {
-    contactResults.innerHTML = '';
-    try {
-      const filteredContacts = await searchContacts(query);
-      console.log('Contacts found:', filteredContacts);
-      if (filteredContacts.length === 0) {
-        contactResults.innerHTML = '<div>No contacts found</div>';
-      } else {
-        filteredContacts.forEach((contact) => {
-          const result = document.createElement('div');
-          result.classList.add('contact-result');
-          result.innerHTML = `<strong>${contact.name}</strong> (${contact.email || contact.phone || 'No contact info'})`;
-          result.addEventListener('click', () => {
-            console.log('Starting chat with:', contact.name);
-            startNewChat(contact);
-          });
-          contactResults.appendChild(result);
-        });
-      }
-    } catch (error) {
-      console.error('Error during contact search:', error.message);
-      contactResults.innerHTML = '<div>Error loading contacts</div>';
+
+  try {
+    if (input.includes('@')) {
+      console.log('Sending email link');
+      await signInWithEmailLink(auth, input, {
+        url: window.location.href,
+        handleCodeInApp: true
+      });
+      alert('Sign-in link sent to your email. Check your inbox.');
+      if (otpInput) otpInput.style.display = 'block';
+      if (verifyOtpButton) verifyOtpButton.style.display = 'block';
+    } else {
+      console.log('Sending phone OTP');
+      confirmationResult = await signInWithPhoneNumber(auth, input, recaptchaVerifier);
+      alert('OTP sent to your phone.');
+      if (otpInput) otpInput.style.display = 'block';
+      if (verifyOtpButton) verifyOtpButton.style.display = 'block';
     }
-  } else {
-    console.error('Contact results element not found');
+  } catch (error) {
+    console.error('Error sending OTP:', error.message);
+    alert('Error sending OTP: ' + error.message);
   }
-});
+}
+
+// Verify OTP
+async function verifyOTP() {
+  const otp = otpInput?.value.trim();
+  console.log('Verifying OTP:', otp);
+  if (!otp) {
+    alert('Please enter the OTP');
+    return;
+  }
+
+  try {
+    let userCredential;
+    if (loginInput?.value.includes('@')) {
+      alert('Email link verification should be handled via the link sent to your email.');
+    } else {
+      userCredential = await confirmationResult.confirm(otp);
+      console.log('Phone OTP verified');
+    }
+    const user = userCredential.user;
+    await syncFirebaseUserWithSupabase(user);
+    if (loginModal) loginModal.style.display = 'none';
+    showChatList();
+  } catch (error) {
+    console.error('Error verifying OTP:', error.message);
+    alert('Error verifying OTP: ' + error.message);
+  }
+}
+
+// Fetch chats from Supabase
+async function fetchChats() {
+  const user = auth.currentUser;
+  if (!user) {
+    console.error('No user logged in for fetching chats');
+    return [];
+  }
+  console.log('Fetching chats for user:', user.uid);
+  try {
+    const { data, error } = await supabase
+      .from('chats')
+      .select(`
+        id,
+        last_message,
+        last_message_time,
+        users!chats_contact_id_fkey (name)
+      `)
+      .or(`user_id.eq.${user.uid},contact_id.eq.${user.uid}`);
+    if (error) {
+      console.error('Error fetching chats:', error.message);
+      alert('Error loading chats: ' + error.message);
+      return [];
+    }
+    console.log('Chats fetched:', data);
+    return data.map(chat => ({
+      id: chat.id,
+      contact: chat.users.name,
+      lastMessage: chat.last_message || 'No messages yet',
+      time: chat.last_message_time ? new Date(chat.last_message_time).toLocaleTimeString() : '',
+      messages: []
+    }));
+  } catch (error) {
+    console.error('Error in fetchChats:', error.message);
+    return [];
+  }
+}
+
+// Fetch messages for a specific chat
+async function fetchMessages(chatId) {
+  console.log('Fetching messages for chat:', chatId);
+  try {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('text, sent_at, is_sent')
+      .eq('chat_id', chatId)
+      .order('sent_at', { ascending: true });
+    if (error) {
+      console.error('Error fetching messages:', error.message);
+      return [];
+    }
+    console.log('Messages fetched:', data);
+    return data.map(msg => ({
+      text: msg.text,
+      sent: msg.is_sent,
+      time: new Date(msg.sent_at).toLocaleTimeString()
+    }));
+  } catch (error) {
+    console.error('Error in fetchMessages:', error.message);
+    return [];
+  }
+}
+
+// Display chat list
+async function showChatList() {
+  console.log('Displaying chat list');
+  chats = await fetchChats();
+  if (messagesDiv) {
+    messagesDiv.innerHTML = '';
+    if (chats.length === 0) {
+      messagesDiv.innerHTML = '<div>No chats available</div>';
+    }
+    chats.forEach((chat) => {
+      const chatItem = document.createElement('div');
+      chatItem.classList.add('chat-item');
+      chatItem.innerHTML = `
+        <div style="padding: 10px; cursor: pointer; border-bottom: 1px solid #333;">
+          <strong>${chat.contact}</strong>
+          <p>${chat.lastMessage}</p>
+          <small>${chat.time}</small>
+        </div>
+      `;
+      chatItem.addEventListener('click', async () => {
+        console.log('Chat clicked:', chat.id);
+        chat.messages = await fetchMessages(chat.id);
+        showChatMessages(chat);
+      });
+      messagesDiv.appendChild(chatItem);
+    });
+  } else {
+    console.error('Messages div not found');
+  }
+}
+
+// Display messages for a chat
+function showChatMessages(chat) {
+  console.log('Displaying messages for chat:', chat.id);
+  currentChat = chat;
+  if (messagesDiv) {
+    messagesDiv.innerHTML = '';
+    chat.messages.forEach((msg) => {
+      const message = document.createElement('div');
+      message.classList.add('message', msg.sent ? 'sent' : 'received');
+      message.innerHTML = `${msg.text} <small>${msg.time}</small>`;
+      messagesDiv.appendChild(message);
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  } else {
+    console.error('Messages div not found');
+  }
+}
+
+// Chats button click handler
+if (chatsButton) {
+  chatsButton.addEventListener('click', () => {
+    console.log('Chats button clicked');
+    otherButtons.forEach((btn) => btn.classList.remove('active'));
+    chatsButton.classList.add('active');
+    showChatList();
+  });
+} else {
+  console.error('Chats button not found');
+}
 
 // Search contacts in Supabase
 async function searchContacts(query) {
-  console.log('Querying Supabase for contacts with:', query);
-  const { data, error } = await supabase
-    .from('users')
-    .select('id, name, email, phone')
-    .or(`name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`);
-  if (error) {
-    console.error('Supabase search error:', error.message);
-    throw error;
+  console.log('Searching contacts with query:', query);
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, name, email, phone')
+      .or(`name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`);
+    if (error) {
+      console.error('Supabase search error:', error.message);
+      alert('Error searching contacts: ' + error.message);
+      throw error;
+    }
+    console.log('Contacts found:', data);
+    return data;
+  } catch (error) {
+    console.error('Error in searchContacts:', error.message);
+    return [];
   }
-  return data;
 }
 
 // Start a new chat
 async function startNewChat(contact) {
-  console.log('Attempting to start new chat with:', contact);
+  console.log('Starting new chat with:', contact);
   const user = auth.currentUser;
   if (!user) {
     console.error('No user logged in');
@@ -124,180 +329,120 @@ async function startNewChat(contact) {
     alert('Error starting chat: ' + error.message);
   }
 }
-```
 
-**Changes**:
-- Added extensive console logs to track each step (button click, modal open, search query, chat creation).
-- Improved error handling with user alerts for failed operations.
-- Used optional chaining (`?.`) to prevent crashes if elements are missing.
-- Added fallback messages (e.g., “No contacts found”) in the modal.
+// Open contact search modal
+if (floatingMafia) {
+  floatingMafia.addEventListener('click', () => {
+    console.log('Mafia button clicked at', new Date().toLocaleTimeString());
+    if (contactSearchModal) {
+      contactSearchModal.style.display = 'flex';
+      if (contactSearchInput) contactSearchInput.focus();
+      console.log('Contact search modal opened');
+    } else {
+      console.error('Contact search modal not found');
+      alert('Cannot open contact search: Modal not found');
+    }
+  });
+} else {
+  console.error('Floating Mafia button not found');
+  alert('Mafia button not found');
+}
 
-**Action**:
-- Replace the Mafia button section in your `script.js` with the above code.
-- Ensure the rest of `script.js` (login, chat fetching, etc.) remains as previously provided.
-- Save and push to GitHub:
-  ```bash
-  git add script.js
-  git commit -m "Update Mafia button logic with debugging logs"
-  git push origin main
-  ```
+// Close contact search modal
+function closeContactModal() {
+  console.log('Closing contact search modal');
+  if (contactSearchModal) {
+    contactSearchModal.style.display = 'none';
+    if (contactSearchInput) contactSearchInput.value = '';
+    if (contactResults) contactResults.innerHTML = '';
+  } else {
+    console.error('Contact search modal not found');
+  }
+}
 
-#### **Step 3: Verify Firebase Authentication**
-The `startNewChat` function requires a logged-in user. If authentication fails, the button may not work.
-
-1. **Test OTP Login**:
-   - Visit `https://mafia-chat.vercel.app/chatroom.html`.
-   - The login modal should appear.
-   - Enter a phone number (e.g., `+923001234567`) or email (e.g., `john@example.com`).
-   - Click **Send OTP**, complete the reCAPTCHA, and receive the OTP (SMS for phone, email link for email).
-   - For phone, enter the OTP and click **Verify OTP**.
-   - For email, click the link in your inbox (ensure Firebase redirect URL is `https://mafia-chat.vercel.app/chatroom.html` in Firebase Console > Authentication > Settings).
-   - Check Firebase Console (**Authentication > Users**) for the user’s UID.
-
-2. **Sync with Supabase**:
-   - The `syncFirebaseUserWithSupabase` function adds the Firebase user to the Supabase `users` table.
-   - Verify in Supabase (**Table Editor > users**) that the user appears with their Firebase UID, name, email, or phone.
-   - Console should log “Syncing user: <uid>” and, if new, “Inserting new user to Supabase”.
-
-#### **Step 4: Verify Supabase Setup**
-The button relies on Supabase for contact search and chat creation.
-
-1. **Check `users` Table**:
-   - In Supabase (**Table Editor > users**), ensure there are test users:
-     ```sql
-     INSERT INTO users (id, name, email, phone) VALUES
-       ('firebase-user1-uid', 'John Doe', 'john@example.com', '+923001234567'),
-       ('firebase-user2-uid', 'Jane Smith', 'jane@example.com', '+923009876543');
-     ```
-     Replace `firebase-user1-uid` and `firebase-user2-uid` with actual Firebase UIDs from the login test.
-
-2. **Verify RLS Policies**:
-   - In Supabase (**Authentication > Policies**), ensure:
-     ```sql
-     CREATE POLICY "Allow authenticated users to read users" ON users
-       FOR SELECT USING (true);
-     CREATE POLICY "Allow authenticated users to insert chats" ON chats
-       FOR INSERT WITH CHECK (auth.uid() = user_id);
-     CREATE POLICY "Allow authenticated users to read chats" ON chats
-       FOR SELECT USING (auth.uid() = user_id OR auth.uid() = contact_id);
-     ```
-   - If missing, add these policies to allow contact search and chat creation.
-
-3. **Test Supabase Queries**:
-   - The `searchContacts` function queries the `users` table. Check console logs for “Querying Supabase for contacts” and “Contacts found”.
-   - If no contacts appear, ensure the `users` table has data and RLS allows access.
-
-#### **Step 5: Test the Mafia Button**
-1. **Access the App**:
-   - Visit `https://mafia-chat.vercel.app` (redirects to `chatroom.html`).
-   - Log in using OTP.
-
-2. **Click Mafia Button**:
-   - Click the yellow “Mafia” button (bottom-right).
-   - The contact search modal should open, and the input field should be focused.
-   - Check console for “Mafia button clicked at <time>”.
-
-3. **Search Contacts**:
-   - Type a name, email, or phone (e.g., “John” or “+92300”).
-   - Contacts should appear in the modal. Check console for “Contact search input” and “Contacts found”.
-   - If “No contacts found” appears, verify the `users` table has data.
-
-4. **Start a Chat**:
-   - Click a contact to start a new chat.
-   - The modal should close, and the chat should appear in the chat list.
-   - Check console for “Starting chat with” and “New chat created”.
-   - Verify in Supabase (**Table Editor > chats**) that the new chat is added.
-
-5. **Check Console Logs**:
-   - Open **Developer Tools > Console** in your browser.
-   - Look for:
-     - `Floating Mafia button: Found`
-     - `Mafia button clicked at <time>`
-     - `Contact search input: <query>`
-     - `Contacts found: [...]`
-     - `Starting chat with: <name>`
-     - `New chat created: {...}`
-   - Note any errors (e.g., “Floating Mafia button: Not found” or “Supabase search error”).
-
-#### **StepTribal Council**
-
-**Common Issues and Fixes**:
-1. **Button Doesn’t Respond**:
-   - **Cause**: DOM element not found or JavaScript error.
-   - **Fix**: Ensure `floating-mafia` class is correct in `chatroom.html`. Check console for errors like “Floating Mafia button: Not found”.
-   - **Test**: Reload the page and click the button.
-
-2. **Modal Opens but Search Fails**:
-   - **Cause**: Empty `users` table or RLS restrictions.
-   - **Fix**: Add test users to Supabase (as shown above). Verify RLS policy for `users` table.
-   - **Test**: Search for a known user and check console for “Contacts found”.
-
-3. **Chat Creation Fails**:
-   - **Cause**: Authentication issue or RLS restrictions on `chats` table.
-   - **Fix**: Ensure user is logged in (check Firebase UID). Add RLS policy for `chats` table (as above).
-   - **Test**: Start a chat and check Supabase `chats` table.
-
-4. **JavaScript Errors**:
-   - **Cause**: Module import issues or browser compatibility.
-   - **Fix**: Ensure `type="module"` in script tags. Test in Chrome/Firefox.
-
-#### **Step 6: Update Vercel**
-1. **Push Changes**:
-   - If you updated `script.js`, commit and push:
-     ```bash
-     git add script.js
-     git commit -m "Fix Mafia button with enhanced debugging"
-     git push origin main
-     ```
-
-2. **Redeploy**:
-   - Vercel should auto-deploy. Manually redeploy if needed via Vercel’s dashboard.
-
-3. **Verify Environment Variables**:
-   - In Vercel **Settings > Environment Variables**, ensure:
-     - `SUPABASE_URL`: `ttps://ltrbnjqvmtaposcbfzem.supabase.co`
-     - `SUPABASE_ANON_KEY`: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0cmJuanF2bXRhcG9zY2JmemVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0MTg2NjksImV4cCI6MjA2Nzk5NDY2OX0.WVKje-Zecelx8FN7JrZSaSriOkUeVvX90QQ-O9pJCpc`
-     - `FIREBASE_API_KEY`: `AIzaSyB3qEXB3nh8CHCTQ2PBPLA-CgUDLyN0f4M`
-
-#### **Step 7: Final Testing**
-1. **Clear Browser Cache**:
-   - Clear your browser cache to ensure the latest `script.js` is loaded.
-
-2. **Test Workflow**:
-   - Log in via OTP.
-   - Click the "Mafia" button.
-   - Search for a contact and start a chat.
-   - Verify the chat appears in the chat list and Supabase.
-
-3. **Share Console Errors**:
-   - If the button still doesn’t work, share the console logs from **Developer Tools > Console**.
-   - Note specific behaviors (e.g., modal doesn’t open, search fails, etc.).
-
----
-
-### **Notes**
-- **Security**: For production, move sensitive keys to environment variables:
-  - Update `firebase.js` and `supabase.js` to use `import.meta.env.VITE_FIREBASE_API_KEY` and `import.meta.env.VITE_SUPABASE_ANON_KEY`.
-  - Add to Vercel’s environment variables.
-- **Firebase OTP**: Ensure SMS quotas are sufficient. Email links require correct redirect URL.
-- **Supabase Data**: Add multiple test users to make contact search functional.
-- **Real-Time Updates**: Consider adding Supabase subscriptions for real-time chat updates:
-  ```javascript
-  supabase
-    .channel('messages')
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-      if (payload.new.chat_id === currentChat?.id) {
-        currentChat.messages.push({
-          text: payload.new.text,
-          sent: payload.new.sender_id === auth.currentUser.uid,
-          time: new Date(payload.new.sent_at).toLocaleTimeString()
-        });
-        showChatMessages(currentChat);
+// Handle contact search input
+if (contactSearchInput) {
+  contactSearchInput.addEventListener('input', async (e) => {
+    console.log('Contact search input:', e.target.value);
+    const query = e.target.value.trim().toLowerCase();
+    if (!query) {
+      if (contactResults) contactResults.innerHTML = '';
+      return;
+    }
+    if (contactResults) {
+      contactResults.innerHTML = '';
+      try {
+        const filteredContacts = await searchContacts(query);
+        if (filteredContacts.length === 0) {
+          contactResults.innerHTML = '<div>No contacts found</div>';
+        } else {
+          filteredContacts.forEach((contact) => {
+            const result = document.createElement('div');
+            result.classList.add('contact-result');
+            result.innerHTML = `<strong>${contact.name}</strong> (${contact.email || contact.phone || 'No contact info'})`;
+            result.addEventListener('click', () => {
+              console.log('Starting chat with:', contact.name);
+              startNewChat(contact);
+            });
+            contactResults.appendChild(result);
+          });
+        }
+      } catch (error) {
+        console.error('Error during contact search:', error.message);
+        contactResults.innerHTML = '<div>Error loading contacts</div>';
       }
-    })
-    .subscribe();
-  ```
+    } else {
+      console.error('Contact results element not found');
+    }
+  });
+} else {
+  console.error('Contact search input not found');
+}
 
----
+// Send a message
+async function sendMessage() {
+  const text = messageInput?.value.trim();
+  console.log('Sending message:', text);
+  if (text && currentChat) {
+    const user = auth.currentUser;
+    if (!user) {
+      console.error('No user logged in');
+      alert('Please log in to send messages');
+      return;
+    }
+    try {
+      const { error } = await supabase
+        .from('messages')
+        .insert({
+          chat_id: currentChat.id,
+          sender_id: user.uid,
+          text,
+          sent_at: new Date().toISOString(),
+          is_sent: true
+        });
+      if (error) {
+        console.error('Error sending message:', error.message);
+        alert('Error sending message: ' + error.message);
+        return;
+      }
+      await supabase
+        .from('chats')
+        .update({
+          last_message: text,
+          last_message_time: new Date().toISOString()
+        })
+        .eq('id', currentChat.id);
+      currentChat.messages.push({ text, sent: true, time: new Date().toLocaleTimeString() });
+      if (messageInput) messageInput.value = '';
+      showChatMessages(currentChat);
+    } catch (error) {
+      console.error('Error in sendMessage:', error.message);
+      alert('Error sending message: ' + error.message);
+    }
+  } else {
+    console.log('No message text or chat selected');
+  }
+}
 
-This updated `script.js` includes robust debugging to identify why the "Mafia" button isn’t working. Update the file, redeploy, and test again. If issues persist, share the console logs or specific behavior (e.g., “modal doesn’t open” or “search returns no results”), and I’ll provide a targeted fix.
+// Initialize on page load
+init();
