@@ -1,144 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Mafia Chat - WhatsApp Style</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { margin: 0; font-family: sans-serif; }
-    .app-container { display: flex; height: 100vh; }
-    .sidebar {
-      width: 80px;
-      background: #111;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 0;
-    }
-    .sidebar button {
-      width: 60px;
-      height: 60px;
-      margin: 5px 0;
-      background: #222;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      font-size: 10px;
-      cursor: pointer;
-    }
-    .chat-display {
-      flex-grow: 1;
-      position: relative;
-      background: #f0f0f0;
-      overflow: hidden;
-    }
-    .page {
-      display: none;
-      height: 100%;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .page.active { display: block; }
-  </style>
-</head>
-<body>
-  <div class="app-container">
-    <!-- Sidebar Buttons -->
-    <div class="sidebar">
-      <!-- Buttons: You can replace with icons later -->
-      <button onclick="switchPage('chatRoom')">🏠</button>
-      <button onclick="switchPage('chatText')">💬</button>
-      <button onclick="switchPage('chatVoice')">🎤</button>
-      <button onclick="switchPage('chatFile')">📁</button>
-      <button onclick="switchPage('chatMedia')">🖼️</button>
-      <button onclick="switchPage('chatVoiceView')">🎧</button>
-      <button onclick="switchPage('contacts')">📇</button>
-      <button onclick="switchPage('contactGalleries')">🗂️</button>
-      <button onclick="switchPage('emoji')">😊</button>
-      <button onclick="switchPage('emojiPicker')">🎯</button>
-      <button onclick="switchPage('galleryFiles')">🗃️</button>
-      <button onclick="switchPage('galleryImages')">🖼️</button>
-      <button onclick="switchPage('galleryVideos')">🎞️</button>
-      <button onclick="switchPage('galleryNotes')">📝</button>
-      <button onclick="switchPage('groupChat')">👥</button>
-      <button onclick="switchPage('groupCreate')">➕</button>
-      <button onclick="switchPage('groupInvite')">✉️</button>
-      <button onclick="switchPage('groupMedia')">📸</button>
-      <button onclick="switchPage('groupFile')">📂</button>
-      <button onclick="switchPage('groupVoice')">📞</button>
-      <button onclick="switchPage('groupVoiceView')">🔊</button>
-      <button onclick="switchPage('groupAudioCall')">🔈</button>
-      <button onclick="switchPage('groupCall')">📳</button>
-      <button onclick="switchPage('groupMembers')">👤</button>
-      <button onclick="switchPage('groupPin')">📌</button>
-      <button onclick="switchPage('groupPrivacy')">🔐</button>
-      <button onclick="switchPage('groupRequests')">📥</button>
-      <button onclick="switchPage('groupSettings')">⚙️</button>
-      <button onclick="switchPage('groupStatusUpload')">⬆️</button>
-      <button onclick="switchPage('groupStatusView')">👁️</button>
-      <button onclick="switchPage('location')">📍</button>
-      <button onclick="switchPage('mafiaGalleryDashboard')">🖥️</button>
-      <button onclick="switchPage('status')">📲</button>
-      <button onclick="switchPage('statusView')">👀</button>
-      <button onclick="switchPage('videoChat')">📹</button>
-      <button onclick="switchPage('groupBanList')">🚫</button>
-    </div>
-
-    <!-- Main Chat Display Area -->
-    <div class="chat-display">
-      <!-- ChatRoom (default open) -->
-      <div id="chatRoom" class="page active">
-        <!-- Your ChatRoom HTML here -->
-        <h2>Welcome to Mafia Chat Room</h2>
-      </div>
-
-      <!-- Other Pages: Hidden by default -->
-      <div id="chatText" class="page">Chat Text Page</div>
-      <div id="chatVoice" class="page">Chat Voice Page</div>
-      <div id="chatFile" class="page">Chat File Page</div>
-      <div id="chatMedia" class="page">Chat Media Page</div>
-      <div id="chatVoiceView" class="page">Chat Voice View</div>
-      <div id="contacts" class="page">Contacts Page</div>
-      <div id="contactGalleries" class="page">Contact Galleries</div>
-      <div id="emoji" class="page">Emoji Page</div>
-      <div id="emojiPicker" class="page">Emoji Picker</div>
-      <div id="galleryFiles" class="page">Gallery Files</div>
-      <div id="galleryImages" class="page">Gallery Images</div>
-      <div id="galleryVideos" class="page">Gallery Videos</div>
-      <div id="galleryNotes" class="page">Gallery Notes</div>
-      <div id="groupChat" class="page">Group Chat</div>
-      <div id="groupCreate" class="page">Group Create</div>
-      <div id="groupInvite" class="page">Group Invite</div>
-      <div id="groupMedia" class="page">Group Media</div>
-      <div id="groupFile" class="page">Group File</div>
-      <div id="groupVoice" class="page">Group Voice</div>
-      <div id="groupVoiceView" class="page">Group Voice View</div>
-      <div id="groupAudioCall" class="page">Group Audio Call</div>
-      <div id="groupCall" class="page">Group Call</div>
-      <div id="groupMembers" class="page">Group Members</div>
-      <div id="groupPin" class="page">Group Pin</div>
-      <div id="groupPrivacy" class="page">Group Privacy</div>
-      <div id="groupRequests" class="page">Group Requests</div>
-      <div id="groupSettings" class="page">Group Settings</div>
-      <div id="groupStatusUpload" class="page">Group Status Upload</div>
-      <div id="groupStatusView" class="page">Group Status View</div>
-      <div id="location" class="page">Location</div>
-      <div id="mafiaGalleryDashboard" class="page">Gallery Dashboard</div>
-      <div id="status" class="page">Status Page</div>
-      <div id="statusView" class="page">Status View</div>
-      <div id="videoChat" class="page">Video Chat</div>
-      <div id="groupBanList" class="page">Group Ban List</div>
-    </div>
-  </div>
-
-  <script>
-    function switchPage(pageId) {
-      const pages = document.querySelectorAll('.page');
-      pages.forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-    }
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mafia Chat</title>
+    <meta http-equiv="refresh" content="0; url=chatroom.html" />
+    <script>
+      // JavaScript backup redirect (if meta doesn't work)
+      window.location.href = "chatroom.html";
+    </script>
+  </head>
+  <body style="background:black; color:white;">
+    <p>Redirecting to Mafia Chat Dashboard...</p>
+  </body>
 </html>
