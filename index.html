@@ -1,15 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Mafia Chat</title>
-    <meta http-equiv="refresh" content="0; url=chatroom.html" />
-    <script>
-      // JavaScript backup redirect (if meta doesn't work)
-      window.location.href = "chatroom.html";
-    </script>
-  </head>
-  <body style="background:black; color:white;">
-    <p>Redirecting to Mafia Chat Dashboard...</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Mafia Chat - WhatsApp Style</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: sans-serif;
+      height: 100vh;
+      display: flex;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    .sidebar {
+      width: 300px;
+      background-color: #1e1e1e;
+      border-right: 1px solid #333;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #1DB954;
+    }
+
+    .chat-list {
+      list-style: none;
+    }
+
+    .chat-list li {
+      padding: 10px;
+      margin-bottom: 5px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .chat-list li:hover {
+      background-color: #333;
+    }
+
+    .chat-room {
+      flex: 1;
+      background-color: #0a0a0a;
+      height: 100vh;
+      border: none;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100px;
+        padding: 5px;
+      }
+      .chat-list li {
+        font-size: 12px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Mafia Chat</h2>
+    <ul class="chat-list">
+      <li onclick="loadChat('chat-room.html')">🧑 Chat Room</li>
+      <li onclick="loadChat('profile.html')">👤 My Profile</li>
+      <li onclick="loadChat('status.html')">📸 Status</li>
+      <li onclick="loadChat('group-chat.html')">👥 Group Chat</li>
+    </ul>
+  </div>
+
+  <div class="chat-room">
+    <iframe id="chatFrame" src="chat-room.html"></iframe>
+  </div>
+
+  <script>
+    function loadChat(page) {
+      document.getElementById('chatFrame').src = page;
+    }
+  </script>
+
+</body>
 </html>
